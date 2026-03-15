@@ -171,37 +171,96 @@ body {
 
 /* ── Header ──────────────────────────────── */
 .header {
-  padding: 20px 32px;
+  padding: 0 32px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  backdrop-filter: blur(12px);
-  background: rgba(10,14,23,0.85);
+  backdrop-filter: blur(16px);
+  background: rgba(10,14,23,0.94);
   position: sticky;
   top: 0;
   z-index: 100;
+  height: 68px;
+  gap: 24px;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--accent2) 60%, transparent);
+  opacity: 0.4;
 }
 
 .logo-group {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 14px;
+  flex-shrink: 0;
+}
+
+.logo-monogram {
+  width: 42px;
+  height: 42px;
+  border: 1.5px solid var(--gold);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Instrument Serif', serif;
+  font-size: 13px;
+  color: var(--gold);
+  letter-spacing: -0.5px;
+  flex-shrink: 0;
+  position: relative;
+  background: rgba(201,169,110,0.06);
+}
+
+.logo-monogram::before {
+  content: '';
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(201,169,110,0.18);
+  border-radius: 2px;
+}
+
+.logo-text {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .logo {
   font-family: 'Instrument Serif', serif;
-  font-size: 20px;
-  color: var(--accent);
-  letter-spacing: -0.3px;
+  font-size: 17px;
+  color: var(--text);
+  letter-spacing: -0.2px;
+  line-height: 1;
 }
 
 .logo-sub {
-  font-size: 11px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 3px;
-  color: var(--text2);
-  font-weight: 500;
+  letter-spacing: 2.8px;
+  color: var(--accent);
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  line-height: 1;
+}
+
+.logo-sub::before {
+  content: '';
+  display: block;
+  width: 20px;
+  height: 1px;
+  background: var(--accent);
+  flex-shrink: 0;
 }
 
 /* ── Nav ──────────────────────────────── */
@@ -789,7 +848,7 @@ body {
   .grid-3, .control-grid, .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .nav { flex-wrap: wrap; }
   .content { padding: 24px 20px; }
-  .header { flex-direction: column; gap: 12px; padding: 16px; }
+  .header { flex-direction: column; gap: 12px; padding: 12px 16px; height: auto; }
 }
 
 @media (max-width: 640px) {
@@ -1915,8 +1974,11 @@ export default function App() {
       <div className="app">
         <header className="header">
           <div className="logo-group">
-            <span className="logo">Ngehsi Brendan Ngwa Nforbi, Attorneys at Law</span>
-            <span className="logo-sub">Guerrilla Litigation · Maximum Accountability</span>
+            <div className="logo-monogram">NBNN</div>
+            <div className="logo-text">
+              <span className="logo">Ngehsi Brendan Ngwa Nforbi, Attorneys at Law</span>
+              <span className="logo-sub">Guerrilla Litigation · Maximum Accountability</span>
+            </div>
           </div>
           <nav className="nav">
             {SECTIONS.map(s => (
