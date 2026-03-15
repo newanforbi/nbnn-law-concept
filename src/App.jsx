@@ -844,7 +844,7 @@ body {
   .grid-3, .control-grid, .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .nav { flex-wrap: wrap; }
   .content { padding: 24px 20px; }
-  .header { flex-direction: column; gap: 14px; padding: 14px 20px; height: auto; }
+  .header { flex-direction: column; align-items: flex-start; gap: 14px; padding: 14px 20px; height: auto; }
   .logo-vert-divider { display: none; }
   .header::after { width: 100%; }
 }
