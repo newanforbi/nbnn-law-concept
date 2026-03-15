@@ -1,230 +1,400 @@
-import { useMemo, useState } from "react";
+import { useState, useEffect, useRef } from 'react'
+import * as d3 from 'd3'
 
-const SECTIONS = [
-  { key: "overview", label: "Overview", icon: "◈" },
-  { key: "map", label: "Circuit Map", icon: "◉" },
-  { key: "phases", label: "Phases", icon: "▦" },
-  { key: "engine", label: "AI Engine", icon: "⬡" },
-  { key: "finance", label: "Financials", icon: "◇" },
-  { key: "marketing", label: "Marketing", icon: "◎" },
-  { key: "compliance", label: "Compliance", icon: "◫" },
-  { key: "kpi", label: "KPIs", icon: "◨" },
-];
+// ─── Palette & constants ────────────────────────────────────────────────────
+const C = {
+  bg:        '#0d1117',
+  surface:   '#161b22',
+  border:    '#21262d',
+  accent:    '#c9a84c',
+  accentDim: '#8a6e2e',
+  green:     '#3fb950',
+  red:       '#f85149',
+  blue:      '#58a6ff',
+  muted:     '#8b949e',
+  text:      '#e6edf3',
+}
 
-const CIRCUITS = [
-  { id: "1st", color: "#E8927C", states: ["ME", "MA", "NH", "RI", "PR"] },
-  { id: "2nd", color: "#F2C078", states: ["CT", "NY", "VT"] },
-  { id: "3rd", color: "#A8D5BA", states: ["DE", "NJ", "PA", "VI"] },
-  { id: "4th", color: "#7EC8E3", states: ["MD", "NC", "SC", "VA", "WV"] },
-  { id: "5th", color: "#C3A6D8", states: ["LA", "MS", "TX"] },
-  { id: "6th", color: "#F7A4A4", states: ["KY", "MI", "OH", "TN"] },
-  { id: "7th", color: "#B5D99C", states: ["IL", "IN", "WI"] },
-  { id: "8th", color: "#FFD6A5", states: ["AR", "IA", "MN", "MO", "NE", "ND", "SD"] },
-  { id: "9th", color: "#FFB3B3", states: ["AK", "AZ", "CA", "HI", "ID", "MT", "NV", "OR", "WA", "GU", "MP"] },
-  { id: "10th", color: "#A5C9F1", states: ["CO", "KS", "NM", "OK", "UT", "WY"] },
-  { id: "11th", color: "#D4A5E8", states: ["AL", "FL", "GA"] },
-  { id: "D.C.", color: "#E8D4A5", states: ["DC"] },
-];
+// ─── Seed data ───────────────────────────────────────────────────────────────
+const CASES = [
+  { id: 'LIT-2024-001', client: 'Meridian Corp.',   type: 'Commercial',  status: 'Active',   value: 4_200_000, partner: 'A. Harlow',  filed: '2024-01-15' },
+  { id: 'LIT-2024-008', client: 'Vesper Holdings',  type: 'Securities',  status: 'Active',   value: 9_800_000, partner: 'S. Okafor',  filed: '2024-03-02' },
+  { id: 'LIT-2024-012', client: 'Elara Pharma',     type: 'IP',          status: 'Won',      value: 2_100_000, partner: 'A. Harlow',  filed: '2024-02-20' },
+  { id: 'LIT-2023-044', client: 'Crestwood LLC',    type: 'Employment',  status: 'Settled',  value: 850_000,   partner: 'M. Vance',   filed: '2023-11-08' },
+  { id: 'LIT-2023-039', client: 'Orion Logistics',  type: 'Commercial',  status: 'Lost',     value: 1_500_000, partner: 'S. Okafor',  filed: '2023-09-14' },
+  { id: 'LIT-2024-019', client: 'Nova Energy Inc.', type: 'Regulatory',  status: 'Active',   value: 6_300_000, partner: 'M. Vance',   filed: '2024-05-01' },
+  { id: 'LIT-2024-023', client: 'Halcyon Media',    type: 'IP',          status: 'Active',   value: 3_400_000, partner: 'A. Harlow',  filed: '2024-06-18' },
+  { id: 'LIT-2023-028', client: 'Apex Retail Group',type: 'Employment',  status: 'Won',      value: 620_000,   partner: 'M. Vance',   filed: '2023-07-22' },
+]
 
-const PHASE_DATA = [
-  {
-    phase: "Phase Zero",
-    subtitle: "Foundation",
-    timeline: "4-8 weeks",
-    color: "#E8927C",
-    objectives: [
-      "Convert vision into a bounded practice thesis",
-      "Build case underwriting model and repeatable production pipeline",
-      "Implement compliance control plane: AI policy, trust readiness, security baseline",
-    ],
-  },
-  {
-    phase: "Phase One",
-    subtitle: "Solo Operator",
-    timeline: "6-12 months",
-    color: "#7EC8E3",
-    objectives: [
-      "Validate case selection rubric predicts outcomes",
-      "Build production cadence: intake -> filing -> discovery -> settlement",
-      "Maintain trust/security/AI compliance as volume grows",
-    ],
-  },
-  {
-    phase: "Phase Two",
-    subtitle: "Boutique Build-Out",
-    timeline: "12-24 months",
-    color: "#A8D5BA",
-    objectives: [
-      "Specialize into 1-3 claim families with informational advantage",
-      "Hire into staffing lanes, not general helpers",
-      "Upgrade security and governance for bigger defendants",
-    ],
-  },
-  {
-    phase: "Phase Three+",
-    subtitle: "National Expansion",
-    timeline: "24+ months",
-    color: "#C3A6D8",
-    objectives: [
-      "Deploy circuit-node model across all 13 federal circuits",
-      "Scale through federal court uniformity and local counsel networks",
-      "Establish a preeminent AI-powered litigation operation",
-    ],
-  },
-];
+const MONTHLY_REVENUE = [
+  { month: 'Jan', billed: 320, collected: 290 },
+  { month: 'Feb', billed: 410, collected: 370 },
+  { month: 'Mar', billed: 380, collected: 340 },
+  { month: 'Apr', billed: 520, collected: 480 },
+  { month: 'May', billed: 610, collected: 560 },
+  { month: 'Jun', billed: 490, collected: 430 },
+  { month: 'Jul', billed: 570, collected: 510 },
+  { month: 'Aug', billed: 640, collected: 590 },
+]
 
-const styles = {
-  page: { background: "#0A0E17", color: "#E2E8F0", minHeight: "100vh", fontFamily: "system-ui, sans-serif" },
-  header: {
-    display: "flex",
-    justifyContent: "space-between",
-    gap: 16,
-    padding: "16px 24px",
-    borderBottom: "1px solid #2A3A4E",
-    position: "sticky",
-    top: 0,
-    background: "rgba(10,14,23,0.92)",
-    backdropFilter: "blur(8px)",
-  },
-  nav: { display: "flex", gap: 6, flexWrap: "wrap" },
-  btn: { border: "1px solid #2A3A4E", background: "#111827", color: "#94A3B8", padding: "6px 10px", borderRadius: 8 },
-  btnActive: { color: "#D4A574", borderColor: "#D4A574" },
-  content: { maxWidth: 1100, margin: "0 auto", padding: 24 },
-  card: { background: "#1E293B", border: "1px solid #2A3A4E", borderRadius: 12, padding: 16 },
-};
+const OUTCOMES = [
+  { label: 'Won',     value: 38, color: C.green  },
+  { label: 'Settled', value: 29, color: C.accent },
+  { label: 'Active',  value: 24, color: C.blue   },
+  { label: 'Lost',    value: 9,  color: C.red    },
+]
 
-function Overview() {
+// ─── Helpers ─────────────────────────────────────────────────────────────────
+const fmt$ = v =>
+  v >= 1_000_000
+    ? `$${(v / 1_000_000).toFixed(1)}M`
+    : `$${(v / 1_000).toFixed(0)}K`
+
+const statusColor = s =>
+  ({ Active: C.blue, Won: C.green, Settled: C.accent, Lost: C.red }[s] ?? C.muted)
+
+// ─── Revenue bar chart ────────────────────────────────────────────────────────
+function RevenueChart() {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const { width } = el.getBoundingClientRect()
+    const h = 180, ml = 40, mr = 10, mt = 10, mb = 30
+    const W = width - ml - mr
+    const H = h - mt - mb
+
+    d3.select(el).selectAll('*').remove()
+
+    const svg = d3.select(el)
+      .append('svg').attr('width', width).attr('height', h)
+      .append('g').attr('transform', `translate(${ml},${mt})`)
+
+    const x0 = d3.scaleBand().domain(MONTHLY_REVENUE.map(d => d.month)).range([0, W]).padding(0.3)
+    const x1 = d3.scaleBand().domain(['billed', 'collected']).range([0, x0.bandwidth()]).padding(0.05)
+    const y  = d3.scaleLinear().domain([0, 700]).range([H, 0])
+
+    svg.append('g').attr('transform', `translate(0,${H})`)
+      .call(d3.axisBottom(x0).tickSize(0))
+      .select('.domain').remove()
+    svg.selectAll('.tick text').attr('fill', C.muted).attr('font-size', 11)
+
+    svg.append('g')
+      .call(d3.axisLeft(y).ticks(5).tickFormat(d => `$${d}K`).tickSize(-W))
+      .call(g => g.select('.domain').remove())
+      .call(g => g.selectAll('line').attr('stroke', C.border))
+      .call(g => g.selectAll('text').attr('fill', C.muted).attr('font-size', 10))
+
+    const groups = svg.selectAll('.bar-group')
+      .data(MONTHLY_REVENUE).enter().append('g')
+      .attr('transform', d => `translate(${x0(d.month)},0)`)
+
+    const barData = [
+      { key: 'billed',    color: C.accentDim },
+      { key: 'collected', color: C.accent    },
+    ]
+    barData.forEach(({ key, color }) => {
+      groups.append('rect')
+        .attr('x', x1(key))
+        .attr('y', d => y(d[key]))
+        .attr('width', x1.bandwidth())
+        .attr('height', d => H - y(d[key]))
+        .attr('fill', color)
+        .attr('rx', 2)
+    })
+  }, [])
+
+  return <div ref={ref} style={{ width: '100%' }} />
+}
+
+// ─── Donut chart ─────────────────────────────────────────────────────────────
+function DonutChart() {
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const size = 160, r = 70, ir = 48
+
+    d3.select(el).selectAll('*').remove()
+
+    const svg = d3.select(el)
+      .append('svg').attr('width', size).attr('height', size)
+      .append('g').attr('transform', `translate(${size / 2},${size / 2})`)
+
+    const arc  = d3.arc().innerRadius(ir).outerRadius(r)
+    const pie  = d3.pie().value(d => d.value).sort(null)
+    const arcs = pie(OUTCOMES)
+
+    svg.selectAll('path')
+      .data(arcs).enter().append('path')
+      .attr('d', arc)
+      .attr('fill', d => d.data.color)
+      .attr('stroke', C.bg)
+      .attr('stroke-width', 2)
+
+    // centre label
+    svg.append('text').attr('text-anchor', 'middle').attr('dy', '-0.2em')
+      .attr('fill', C.text).attr('font-size', 22).attr('font-weight', 700)
+      .text('100')
+    svg.append('text').attr('text-anchor', 'middle').attr('dy', '1.2em')
+      .attr('fill', C.muted).attr('font-size', 11)
+      .text('cases')
+  }, [])
+
+  return <div ref={ref} style={{ display: 'flex', justifyContent: 'center' }} />
+}
+
+// ─── Stat card ────────────────────────────────────────────────────────────────
+function StatCard({ label, value, sub, color }) {
   return (
-    <div style={{ display: "grid", gap: 16 }}>
-      <h1>Ngehsi Brendan Ngwa Nforbi, Attorneys at Law — Unified Business Plan</h1>
-      <p>
-        AI-native, multi-track plaintiff litigation firm concept focused on civil rights, state torts,
-        and immigration law with compliance-first operations.
-      </p>
-      <div style={{ ...styles.card }}>
-        <h3>Core constraint</h3>
-        <p>
-          The limiting factor is safe AI deployment under confidentiality, supervision, trust-accounting,
-          and technology competence requirements.
-        </p>
+    <div style={{
+      background: C.surface,
+      border: `1px solid ${C.border}`,
+      borderRadius: 8,
+      padding: '16px 20px',
+    }}>
+      <div style={{ color: C.muted, fontSize: 12, marginBottom: 6, textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+        {label}
       </div>
-    </div>
-  );
-}
-
-function MapSection() {
-  return (
-    <div style={{ display: "grid", gap: 16 }}>
-      <h1>Circuit Coverage</h1>
-      <p>Configured federal circuit targets and anchor-state groupings.</p>
-      <div style={{ ...styles.card, overflowX: "auto" }}>
-        <table style={{ width: "100%", borderCollapse: "collapse" }}>
-          <thead>
-            <tr>
-              <th align="left">Circuit</th>
-              <th align="left">States / Territories</th>
-            </tr>
-          </thead>
-          <tbody>
-            {CIRCUITS.map((c) => (
-              <tr key={c.id}>
-                <td style={{ padding: "8px 0", color: c.color }}>{c.id}</td>
-                <td>{c.states.join(", ")}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div style={{ color: color ?? C.text, fontSize: 28, fontWeight: 700, lineHeight: 1 }}>
+        {value}
       </div>
+      {sub && <div style={{ color: C.muted, fontSize: 12, marginTop: 6 }}>{sub}</div>}
     </div>
-  );
+  )
 }
 
-function PhaseSection() {
-  const [expanded, setExpanded] = useState(0);
-  return (
-    <div style={{ display: "grid", gap: 12 }}>
-      <h1>Phased Operating Blueprint</h1>
-      {PHASE_DATA.map((p, i) => (
-        <button
-          key={p.phase}
-          type="button"
-          onClick={() => setExpanded(expanded === i ? -1 : i)}
-          style={{ ...styles.card, textAlign: "left", cursor: "pointer" }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
-            <strong>{p.phase}</strong>
-            <span style={{ color: p.color }}>{p.timeline}</span>
-          </div>
-          <div style={{ color: "#94A3B8", marginTop: 6 }}>{p.subtitle}</div>
-          {expanded === i && (
-            <ul>
-              {p.objectives.map((o) => (
-                <li key={o}>{o}</li>
-              ))}
-            </ul>
-          )}
-        </button>
-      ))}
-    </div>
-  );
-}
-
-function Placeholder({ title }) {
-  return (
-    <div style={styles.card}>
-      <h1>{title}</h1>
-      <p>This section is scaffolded and ready for the full detailed content you supplied.</p>
-    </div>
-  );
-}
-
+// ─── Main app ─────────────────────────────────────────────────────────────────
 export default function App() {
-  const [activeSection, setActiveSection] = useState("overview");
+  const [filter, setFilter] = useState('All')
+  const [search, setSearch] = useState('')
 
-  const section = useMemo(() => {
-    switch (activeSection) {
-      case "overview":
-        return <Overview />;
-      case "map":
-        return <MapSection />;
-      case "phases":
-        return <PhaseSection />;
-      case "engine":
-        return <Placeholder title="AI Engine" />;
-      case "finance":
-        return <Placeholder title="Financials" />;
-      case "marketing":
-        return <Placeholder title="Marketing" />;
-      case "compliance":
-        return <Placeholder title="Compliance" />;
-      case "kpi":
-        return <Placeholder title="KPIs" />;
-      default:
-        return null;
-    }
-  }, [activeSection]);
+  const active   = CASES.filter(c => c.status === 'Active')
+  const totalExp = CASES.reduce((s, c) => s + c.value, 0)
+  const winRate  = Math.round((CASES.filter(c => c.status === 'Won').length /
+    CASES.filter(c => ['Won', 'Lost', 'Settled'].includes(c.status)).length) * 100)
+
+  const filtered = CASES.filter(c =>
+    (filter === 'All' || c.status === filter) &&
+    (c.client.toLowerCase().includes(search.toLowerCase()) ||
+     c.id.toLowerCase().includes(search.toLowerCase()))
+  )
+
+  const statuses = ['All', 'Active', 'Won', 'Settled', 'Lost']
 
   return (
-    <div style={styles.page}>
-      <header style={styles.header}>
-        <div>
-          <div style={{ color: "#D4A574", fontWeight: 700 }}>Ngehsi Brendan Ngwa Nforbi, Attorneys at Law</div>
-          <div style={{ color: "#94A3B8", fontSize: 12 }}>Guerrilla Litigation · Maximum Accountability</div>
+    <div style={{
+      minHeight: '100vh',
+      background: C.bg,
+      color: C.text,
+      fontFamily: '"Inter", "Segoe UI", system-ui, sans-serif',
+      fontSize: 14,
+    }}>
+      {/* Header */}
+      <header style={{
+        borderBottom: `1px solid ${C.border}`,
+        padding: '0 32px',
+        height: 56,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        background: C.surface,
+      }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <div style={{
+            width: 28, height: 28, borderRadius: 6,
+            background: C.accent, display: 'flex', alignItems: 'center', justifyContent: 'center',
+            fontWeight: 800, fontSize: 13, color: '#000',
+          }}>N</div>
+          <span style={{ fontWeight: 700, fontSize: 16 }}>NBNN Law</span>
+          <span style={{ color: C.border, margin: '0 4px' }}>|</span>
+          <span style={{ color: C.muted, fontSize: 13 }}>Litigation Dashboard</span>
         </div>
-        <nav style={styles.nav}>
-          {SECTIONS.map((s) => (
-            <button
-              key={s.key}
-              type="button"
-              onClick={() => setActiveSection(s.key)}
-              style={{ ...styles.btn, ...(activeSection === s.key ? styles.btnActive : {}) }}
-            >
-              {s.icon} {s.label}
-            </button>
-          ))}
-        </nav>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+          <div style={{
+            width: 8, height: 8, borderRadius: '50%',
+            background: C.green, boxShadow: `0 0 6px ${C.green}`,
+          }} />
+          <span style={{ color: C.muted, fontSize: 12 }}>Live · Q3 2024</span>
+        </div>
       </header>
-      <main style={styles.content}>{section}</main>
+
+      <main style={{ padding: '28px 32px', maxWidth: 1200, margin: '0 auto' }}>
+        {/* KPI Row */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(4, 1fr)',
+          gap: 16,
+          marginBottom: 28,
+        }}>
+          <StatCard label="Active Cases"       value={active.length}   sub={`${active.filter(c => c.type === 'Commercial').length} commercial`} color={C.blue}   />
+          <StatCard label="Total Exposure"     value={fmt$(totalExp)}  sub="across all matters"                                                 color={C.accent} />
+          <StatCard label="Win Rate"           value={`${winRate}%`}   sub="closed matters (YTD)"                                               color={C.green}  />
+          <StatCard label="Avg. Case Value"    value={fmt$(totalExp / CASES.length)} sub="per matter"                                           />
+        </div>
+
+        {/* Middle row: Revenue chart + Donut */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: '1fr 280px',
+          gap: 16,
+          marginBottom: 28,
+        }}>
+          {/* Revenue */}
+          <div style={{
+            background: C.surface,
+            border: `1px solid ${C.border}`,
+            borderRadius: 8,
+            padding: '20px 20px 12px',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <span style={{ fontWeight: 600 }}>Revenue · 2024 YTD</span>
+              <div style={{ display: 'flex', gap: 16 }}>
+                {[{ label: 'Billed', color: C.accentDim }, { label: 'Collected', color: C.accent }].map(l => (
+                  <div key={l.label} style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                    <div style={{ width: 10, height: 10, borderRadius: 2, background: l.color }} />
+                    <span style={{ color: C.muted, fontSize: 12 }}>{l.label}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <RevenueChart />
+          </div>
+
+          {/* Outcomes donut */}
+          <div style={{
+            background: C.surface,
+            border: `1px solid ${C.border}`,
+            borderRadius: 8,
+            padding: '20px',
+          }}>
+            <div style={{ fontWeight: 600, marginBottom: 16 }}>Case Outcomes</div>
+            <DonutChart />
+            <div style={{ marginTop: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
+              {OUTCOMES.map(o => (
+                <div key={o.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: '50%', background: o.color }} />
+                    <span style={{ color: C.muted, fontSize: 13 }}>{o.label}</span>
+                  </div>
+                  <span style={{ fontWeight: 600 }}>{o.value}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* Cases table */}
+        <div style={{
+          background: C.surface,
+          border: `1px solid ${C.border}`,
+          borderRadius: 8,
+          overflow: 'hidden',
+        }}>
+          {/* Table header bar */}
+          <div style={{
+            padding: '16px 20px',
+            borderBottom: `1px solid ${C.border}`,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            gap: 12,
+          }}>
+            <span style={{ fontWeight: 600 }}>Matters</span>
+            <div style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
+              {/* Search */}
+              <input
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search client or ID…"
+                style={{
+                  background: C.bg,
+                  border: `1px solid ${C.border}`,
+                  borderRadius: 6,
+                  padding: '6px 12px',
+                  color: C.text,
+                  fontSize: 13,
+                  outline: 'none',
+                  width: 200,
+                }}
+              />
+              {/* Filter pills */}
+              <div style={{ display: 'flex', gap: 4 }}>
+                {statuses.map(s => (
+                  <button key={s} onClick={() => setFilter(s)} style={{
+                    background: filter === s ? C.accent : 'transparent',
+                    border: `1px solid ${filter === s ? C.accent : C.border}`,
+                    borderRadius: 20,
+                    padding: '4px 12px',
+                    color: filter === s ? '#000' : C.muted,
+                    fontSize: 12,
+                    cursor: 'pointer',
+                    fontWeight: filter === s ? 600 : 400,
+                  }}>
+                    {s}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Table */}
+          <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <thead>
+              <tr style={{ background: C.bg }}>
+                {['Matter ID', 'Client', 'Type', 'Partner', 'Value', 'Filed', 'Status'].map(h => (
+                  <th key={h} style={{
+                    padding: '10px 16px',
+                    textAlign: 'left',
+                    color: C.muted,
+                    fontWeight: 500,
+                    fontSize: 12,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.05em',
+                    borderBottom: `1px solid ${C.border}`,
+                  }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {filtered.map((c, i) => (
+                <tr key={c.id} style={{
+                  borderBottom: i < filtered.length - 1 ? `1px solid ${C.border}` : 'none',
+                  transition: 'background 0.15s',
+                }}>
+                  <td style={{ padding: '12px 16px', fontFamily: 'monospace', fontSize: 13, color: C.blue }}>{c.id}</td>
+                  <td style={{ padding: '12px 16px', fontWeight: 500 }}>{c.client}</td>
+                  <td style={{ padding: '12px 16px', color: C.muted }}>{c.type}</td>
+                  <td style={{ padding: '12px 16px', color: C.muted }}>{c.partner}</td>
+                  <td style={{ padding: '12px 16px', fontWeight: 600 }}>{fmt$(c.value)}</td>
+                  <td style={{ padding: '12px 16px', color: C.muted, fontSize: 13 }}>{c.filed}</td>
+                  <td style={{ padding: '12px 16px' }}>
+                    <span style={{
+                      background: statusColor(c.status) + '22',
+                      color: statusColor(c.status),
+                      border: `1px solid ${statusColor(c.status)}44`,
+                      borderRadius: 20,
+                      padding: '3px 10px',
+                      fontSize: 12,
+                      fontWeight: 600,
+                    }}>{c.status}</span>
+                  </td>
+                </tr>
+              ))}
+              {filtered.length === 0 && (
+                <tr>
+                  <td colSpan={7} style={{ padding: 32, textAlign: 'center', color: C.muted }}>
+                    No matters match your filter.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </main>
     </div>
-  );
+  )
 }
