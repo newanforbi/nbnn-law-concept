@@ -212,27 +212,27 @@ body {
 
 .logo-wordmark {
   display: flex;
-  align-items: baseline;
+  flex-direction: column;
   gap: 2px;
   line-height: 1;
 }
 
 .logo-nbnn {
   font-family: 'Instrument Serif', serif;
-  font-size: 32px;
+  font-size: 20px;
   color: var(--gold);
-  letter-spacing: -1.5px;
-  line-height: 1;
+  letter-spacing: -0.3px;
+  line-height: 1.1;
+  white-space: nowrap;
 }
 
 .logo-law {
   font-family: 'Instrument Serif', serif;
   font-style: italic;
-  font-size: 28px;
+  font-size: 13px;
   color: var(--text2);
-  letter-spacing: -0.5px;
+  letter-spacing: 0.2px;
   line-height: 1;
-  padding-left: 3px;
 }
 
 .logo-rule {
@@ -1974,8 +1974,8 @@ export default function App() {
           <div className="logo-group">
             <div className="logo-lockup">
               <div className="logo-wordmark">
-                <span className="logo-nbnn">NBNN</span>
-                <span className="logo-law">Law</span>
+                <span className="logo-nbnn">Ngehsi Brendan Ngwa Nforbi</span>
+                <span className="logo-law">Attorneys at Law</span>
               </div>
               <div className="logo-rule" />
               <span className="logo-sub">Guerrilla Litigation · Maximum Accountability</span>
