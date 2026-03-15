@@ -171,95 +171,91 @@ body {
 
 /* ── Header ──────────────────────────────── */
 .header {
-  padding: 0 32px;
-  border-bottom: 1px solid var(--border);
+  padding: 0 36px;
+  border-bottom: 1px solid rgba(42,58,78,0.6);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  backdrop-filter: blur(16px);
-  background: rgba(10,14,23,0.94);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10,14,23,0.96);
   position: sticky;
   top: 0;
   z-index: 100;
-  height: 68px;
-  gap: 24px;
+  height: 72px;
+  gap: 32px;
 }
 
 .header::after {
   content: '';
   position: absolute;
-  bottom: 0;
+  bottom: -1px;
   left: 0;
-  right: 0;
+  width: 340px;
   height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--accent2) 60%, transparent);
-  opacity: 0.4;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--accent2) 55%, transparent 100%);
+  opacity: 0.55;
 }
 
 .logo-group {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 18px;
   flex-shrink: 0;
 }
 
-.logo-monogram {
-  width: 42px;
-  height: 42px;
-  border: 1.5px solid var(--gold);
-  border-radius: 5px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Instrument Serif', serif;
-  font-size: 13px;
-  color: var(--gold);
-  letter-spacing: -0.5px;
-  flex-shrink: 0;
-  position: relative;
-  background: rgba(201,169,110,0.06);
-}
-
-.logo-monogram::before {
-  content: '';
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(201,169,110,0.18);
-  border-radius: 2px;
-}
-
-.logo-text {
+.logo-lockup {
   display: flex;
   flex-direction: column;
-  gap: 3px;
+  gap: 5px;
 }
 
-.logo {
-  font-family: 'Instrument Serif', serif;
-  font-size: 17px;
-  color: var(--text);
-  letter-spacing: -0.2px;
+.logo-wordmark {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
   line-height: 1;
+}
+
+.logo-nbnn {
+  font-family: 'Instrument Serif', serif;
+  font-size: 32px;
+  color: var(--gold);
+  letter-spacing: -1.5px;
+  line-height: 1;
+}
+
+.logo-law {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 28px;
+  color: var(--text2);
+  letter-spacing: -0.5px;
+  line-height: 1;
+  padding-left: 3px;
+}
+
+.logo-rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold) 0%, rgba(201,169,110,0.15) 100%);
 }
 
 .logo-sub {
-  font-size: 9px;
+  font-size: 8px;
   text-transform: uppercase;
-  letter-spacing: 2.8px;
-  color: var(--accent);
-  font-weight: 600;
-  display: flex;
-  align-items: center;
-  gap: 7px;
+  letter-spacing: 3.2px;
+  color: var(--text2);
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
   line-height: 1;
+  white-space: nowrap;
 }
 
-.logo-sub::before {
-  content: '';
-  display: block;
-  width: 20px;
-  height: 1px;
-  background: var(--accent);
+.logo-vert-divider {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(180deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
   flex-shrink: 0;
 }
 
@@ -848,7 +844,9 @@ body {
   .grid-3, .control-grid, .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .nav { flex-wrap: wrap; }
   .content { padding: 24px 20px; }
-  .header { flex-direction: column; gap: 12px; padding: 12px 16px; height: auto; }
+  .header { flex-direction: column; gap: 14px; padding: 14px 20px; height: auto; }
+  .logo-vert-divider { display: none; }
+  .header::after { width: 100%; }
 }
 
 @media (max-width: 640px) {
@@ -1974,11 +1972,15 @@ export default function App() {
       <div className="app">
         <header className="header">
           <div className="logo-group">
-            <div className="logo-monogram">NBNN</div>
-            <div className="logo-text">
-              <span className="logo">Ngehsi Brendan Ngwa Nforbi, Attorneys at Law</span>
+            <div className="logo-lockup">
+              <div className="logo-wordmark">
+                <span className="logo-nbnn">NBNN</span>
+                <span className="logo-law">Law</span>
+              </div>
+              <div className="logo-rule" />
               <span className="logo-sub">Guerrilla Litigation · Maximum Accountability</span>
             </div>
+            <div className="logo-vert-divider" />
           </div>
           <nav className="nav">
             {SECTIONS.map(s => (
