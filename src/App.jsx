@@ -955,7 +955,7 @@ function CircuitMap() {
 function OverviewSection() {
   return (
     <div>
-      <h1 className="section-title">Ngehsi Brendan Ngwa Nforbi, Attorneys at Law — Unified Business Plan</h1>
+      <h1 className="section-title">Ngehsi Brendan Ngwa Nforbi, Attorneys at Law</h1>
       <p className="section-subtitle">
         An AI-native, multi-track plaintiff litigation firm built to collapse the cost of legal production while
         capturing underserved markets in civil rights, state torts, and immigration law. Compliance-first.
