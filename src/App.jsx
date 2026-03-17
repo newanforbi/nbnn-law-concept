@@ -425,6 +425,12 @@ body {
   margin-bottom: 28px;
   position: relative;
   overflow: hidden;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.map-container:hover {
+  border-color: rgba(212,165,116,0.3);
+  box-shadow: 0 0 48px rgba(212,165,116,0.05);
 }
 
 .map-container::after {
@@ -433,36 +439,73 @@ body {
   inset: 0;
   border-radius: 16px;
   pointer-events: none;
-  background: radial-gradient(ellipse at 50% 80%, rgba(212,165,116,0.04), transparent 70%);
+  background: radial-gradient(ellipse at 50% 90%, rgba(212,165,116,0.06), transparent 60%);
 }
 
 .map-svg {
   width: 100%;
   height: auto;
   display: block;
+  border-radius: 10px;
 }
 
 .map-svg .state {
-  stroke: var(--bg);
-  stroke-width: 0.6;
-  transition: opacity 0.2s;
+  stroke: rgba(10,14,23,0.85);
+  stroke-width: 0.7;
+  transition: filter 0.2s, opacity 0.25s;
   cursor: pointer;
 }
 
-.map-svg .state:hover { opacity: 0.8; }
+.map-svg .state:hover {
+  filter: brightness(1.45) saturate(1.3);
+}
+
+.map-svg .state.circuit-dimmed {
+  opacity: 0.28;
+}
+
+.map-svg .state.circuit-active {
+  filter: brightness(1.5) saturate(1.35);
+  stroke: rgba(255,255,255,0.25);
+  stroke-width: 1;
+}
 
 .map-svg .node-dot {
   cursor: pointer;
   transition: r 0.2s;
 }
 
-.map-svg .node-dot:hover { r: 7; }
+.map-svg .node-dot:hover { r: 6; }
+
+/* Node pulse rings */
+@keyframes nodePulse {
+  0%   { r: 7;  opacity: 0.75; }
+  100% { r: 24; opacity: 0; }
+}
+
+@keyframes nodePulseHQ {
+  0%   { r: 10; opacity: 0.75; }
+  100% { r: 32; opacity: 0; }
+}
+
+.node-pulse      { animation: nodePulse   2.4s ease-out infinite; }
+.node-pulse-hq   { animation: nodePulseHQ 2.4s ease-out infinite; }
+
+/* Connection line dash flow */
+@keyframes dashFlow {
+  from { stroke-dashoffset: 26; }
+  to   { stroke-dashoffset: 0; }
+}
+
+.connection-line {
+  animation: dashFlow 2.8s linear infinite;
+}
 
 .map-legend {
   display: flex;
   flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 16px;
+  gap: 8px;
+  margin-top: 18px;
   justify-content: center;
 }
 
@@ -473,12 +516,24 @@ body {
   font-size: 11px;
   color: var(--text2);
   letter-spacing: 0.5px;
+  padding: 4px 9px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  cursor: default;
+  transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.legend-item:hover {
+  border-color: var(--border);
+  background: rgba(255,255,255,0.03);
+  color: var(--text);
 }
 
 .legend-swatch {
-  width: 12px;
-  height: 12px;
-  border-radius: 3px;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  flex-shrink: 0;
 }
 
 /* ── Tooltip ──────────────────────── */
@@ -486,34 +541,46 @@ body {
   position: fixed;
   background: var(--bg);
   border: 1px solid var(--accent);
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 16px 20px;
-  max-width: 320px;
+  max-width: 300px;
   pointer-events: none;
   z-index: 1000;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.5);
-  animation: tooltipIn 0.2s ease;
+  box-shadow: 0 16px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(255,255,255,0.04);
+  animation: tooltipIn 0.18s ease;
 }
 
 @keyframes tooltipIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to { opacity: 1; transform: scale(1); }
+  from { opacity: 0; transform: translateY(5px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)  scale(1); }
 }
 
 .tooltip-city {
   font-family: 'Instrument Serif', serif;
   font-size: 18px;
   color: var(--accent);
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tooltip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .tooltip-circuit {
   font-family: 'JetBrains Mono', monospace;
-  font-size: 11px;
-  color: var(--text2);
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 2px;
   margin-bottom: 10px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  display: inline-block;
 }
 
 .tooltip-text {
@@ -853,10 +920,18 @@ body {
 `;
 
 // ── Map Component ─────────────────────────────────────────────────
+const normalizeCircuitId = (id) => (id ? id.replace(" (Base)", "") : "");
+
+function getCircuitColor(circuitId) {
+  const found = CIRCUITS.find(c => c.id === normalizeCircuitId(circuitId));
+  return found ? found.color : "#D4A574";
+}
+
 function CircuitMap() {
   const svgRef = useRef(null);
   const [tooltip, setTooltip] = useState(null);
   const [geoData, setGeoData] = useState(null);
+  const [hoveredCircuit, setHoveredCircuit] = useState(null);
 
   useEffect(() => {
     fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
@@ -877,8 +952,17 @@ function CircuitMap() {
   const projection = d3.geoAlbersUsa().scale(1100).translate([480, 300]);
   const pathGen = d3.geoPath().projection(projection);
 
+  const hqNode = NODES.find(n => n.circuit === "9th (Base)");
+  const hqPos  = hqNode ? projection([hqNode.lng, hqNode.lat]) : null;
+
   const handleNodeHover = useCallback((node, e) => {
     setTooltip({ ...node, x: e.clientX, y: e.clientY });
+    setHoveredCircuit(normalizeCircuitId(node.circuit));
+  }, []);
+
+  const handleNodeLeave = useCallback(() => {
+    setTooltip(null);
+    setHoveredCircuit(null);
   }, []);
 
   return (
@@ -886,64 +970,170 @@ function CircuitMap() {
       <div className="map-container">
         <svg ref={svgRef} className="map-svg" viewBox="0 0 960 600">
           <defs>
-            <radialGradient id="glow" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stopColor="#D4A574" stopOpacity="0.6" />
-              <stop offset="100%" stopColor="#D4A574" stopOpacity="0" />
+            {/* SVG background gradients */}
+            <radialGradient id="mapBg" cx="50%" cy="40%" r="75%">
+              <stop offset="0%"   stopColor="#14192A" stopOpacity="1" />
+              <stop offset="100%" stopColor="#0A0E17" stopOpacity="1" />
             </radialGradient>
+            {/* Subtle dot grid overlay */}
+            <pattern id="dotGrid" x="0" y="0" width="28" height="28" patternUnits="userSpaceOnUse">
+              <circle cx="14" cy="14" r="0.65" fill="rgba(255,255,255,0.055)" />
+            </pattern>
+            {/* Glow filter for nodes */}
+            <filter id="nodeGlow" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="2.5" result="blur" />
+              <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
           </defs>
+
+          {/* Background layers */}
+          <rect width="960" height="600" fill="url(#mapBg)" rx="10" />
+          <rect width="960" height="600" fill="url(#dotGrid)" rx="10" />
+
+          {/* State fills with circuit-highlight logic */}
           {geoData && geoData.features.map((f, i) => {
             const fips = f.id;
             const circuit = fipsToCircuit[fips];
+            const normId = circuit ? normalizeCircuitId(circuit.id) : null;
+            const isActive  = hoveredCircuit && normId === hoveredCircuit;
+            const isDimmed  = hoveredCircuit && normId !== hoveredCircuit;
             return (
               <path
                 key={i}
-                className="state"
+                className={`state${isActive ? " circuit-active" : ""}${isDimmed ? " circuit-dimmed" : ""}`}
                 d={pathGen(f) || ""}
-                fill={circuit ? circuit.color + "88" : "#2A3A4E"}
-                onMouseEnter={() => {}}
+                fill={circuit ? circuit.color + "88" : "#1C2535"}
+                onMouseEnter={() => circuit && setHoveredCircuit(normalizeCircuitId(circuit.id))}
+                onMouseLeave={() => !tooltip && setHoveredCircuit(null)}
               />
             );
           })}
+
+          {/* Connection lines: HQ → every other node */}
+          {hqPos && NODES.filter(n => n.circuit !== "9th (Base)").map((n, i) => {
+            const pos = projection([n.lng, n.lat]);
+            if (!pos) return null;
+            const col = getCircuitColor(n.circuit);
+            return (
+              <line
+                key={i}
+                className="connection-line"
+                x1={hqPos[0]} y1={hqPos[1]}
+                x2={pos[0]}   y2={pos[1]}
+                stroke={col}
+                strokeWidth="0.9"
+                strokeOpacity="0.2"
+                strokeDasharray="5 9"
+                style={{ animationDelay: `${i * 0.22}s` }}
+              />
+            );
+          })}
+
+          {/* Nodes */}
           {NODES.map((n, i) => {
             const pos = projection([n.lng, n.lat]);
             if (!pos) return null;
+            const col   = getCircuitColor(n.circuit);
+            const isHQ  = n.circuit === "9th (Base)";
+            const cx = pos[0], cy = pos[1];
             return (
-              <g key={i}>
-                <circle cx={pos[0]} cy={pos[1]} r={14} fill="url(#glow)" />
+              <g key={i} filter="url(#nodeGlow)">
+                {/* Animated outer pulse ring */}
                 <circle
-                  className="node-dot"
-                  cx={pos[0]}
-                  cy={pos[1]}
-                  r={5}
-                  fill="#D4A574"
-                  stroke="#0A0E17"
-                  strokeWidth={2}
-                  onMouseEnter={(e) => handleNodeHover(n, e)}
-                  onMouseLeave={() => setTooltip(null)}
+                  cx={cx} cy={cy}
+                  r={isHQ ? 10 : 7}
+                  fill="none"
+                  stroke={col}
+                  strokeWidth="1.2"
+                  className={isHQ ? "node-pulse-hq" : "node-pulse"}
+                  style={{ animationDelay: `${i * 0.2}s` }}
                 />
-                {n.circuit === "9th (Base)" && (
-                  <text x={pos[0] + 10} y={pos[1] - 10} fill="#D4A574" fontSize="10" fontFamily="JetBrains Mono, monospace" fontWeight="700">HQ</text>
+                {/* Static halo ring */}
+                <circle
+                  cx={cx} cy={cy}
+                  r={isHQ ? 8 : 5.5}
+                  fill="none"
+                  stroke={col}
+                  strokeWidth="1.2"
+                  strokeOpacity="0.4"
+                />
+                {/* HQ diamond */}
+                {isHQ ? (
+                  <rect
+                    x={cx - 4.5} y={cy - 4.5}
+                    width={9} height={9}
+                    fill={col}
+                    stroke="#0A0E17"
+                    strokeWidth={1.5}
+                    transform={`rotate(45 ${cx} ${cy})`}
+                    style={{ cursor: "pointer" }}
+                    onMouseEnter={(e) => handleNodeHover(n, e)}
+                    onMouseLeave={handleNodeLeave}
+                  />
+                ) : (
+                  <circle
+                    className="node-dot"
+                    cx={cx} cy={cy}
+                    r={4}
+                    fill={col}
+                    stroke="#0A0E17"
+                    strokeWidth={1.5}
+                    onMouseEnter={(e) => handleNodeHover(n, e)}
+                    onMouseLeave={handleNodeLeave}
+                  />
+                )}
+                {/* HQ label */}
+                {isHQ && (
+                  <text
+                    x={cx + 13} y={cy - 11}
+                    fill={col}
+                    fontSize="9"
+                    fontFamily="JetBrains Mono, monospace"
+                    fontWeight="700"
+                    letterSpacing="1.5"
+                  >HQ</text>
                 )}
               </g>
             );
           })}
         </svg>
+
         <div className="map-legend">
           {CIRCUITS.filter(c => c.id !== "D.C.").map(c => (
-            <div key={c.id} className="legend-item">
+            <div
+              key={c.id}
+              className="legend-item"
+              onMouseEnter={() => setHoveredCircuit(c.id)}
+              onMouseLeave={() => setHoveredCircuit(null)}
+            >
               <div className="legend-swatch" style={{ background: c.color }} />
               {c.id} Circuit
             </div>
           ))}
         </div>
       </div>
-      {tooltip && (
-        <div className="tooltip" style={{ left: tooltip.x + 16, top: tooltip.y - 10 }}>
-          <div className="tooltip-city">{tooltip.city}</div>
-          <div className="tooltip-circuit">{tooltip.circuit} Circuit</div>
-          <div className="tooltip-text">{tooltip.rationale}</div>
-        </div>
-      )}
+
+      {tooltip && (() => {
+        const col = getCircuitColor(tooltip.circuit);
+        return (
+          <div
+            className="tooltip"
+            style={{ left: tooltip.x + 16, top: tooltip.y - 10, borderColor: col + "99" }}
+          >
+            <div className="tooltip-city">
+              <span className="tooltip-dot" style={{ background: col, boxShadow: `0 0 8px ${col}` }} />
+              {tooltip.city}
+            </div>
+            <div
+              className="tooltip-circuit"
+              style={{ color: col, background: col + "1A" }}
+            >
+              {tooltip.circuit} Circuit
+            </div>
+            <div className="tooltip-text">{tooltip.rationale}</div>
+          </div>
+        );
+      })()}
     </>
   );
 }
