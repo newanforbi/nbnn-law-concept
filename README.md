@@ -1,16 +1,23 @@
-# NBNN Law — Litigation Dashboard
+# Ngehsi Brendan Ngwa Nforbi, Attorneys at Law
+
+**Guerrilla Litigation · Maximum Accountability**
 
 **Live:** https://newanforbi.github.io/nbnn-law-concept/
 
-A concept dashboard for a litigation law firm, built with React, Vite, and D3.js.
+A concept dashboard for an AI-native, multi-track plaintiff litigation firm built to collapse the cost of legal production while capturing underserved markets in civil rights, state torts, and immigration law.
 
-## Features
+## Sections
 
-- **KPI Cards** — live counts for active cases, total exposure, win rate, and average matter value
-- **Revenue Chart** — grouped bar chart comparing monthly billed vs. collected revenue (D3)
-- **Case Outcomes Donut** — breakdown of Won / Settled / Active / Lost matters (D3)
-- **Matters Table** — filterable by status, searchable by client name or matter ID, with color-coded status badges
-- **Dark UI** — bespoke design system with gold accent (`#c9a84c`) matching NBNN Law branding
+| Section | Description |
+|---|---|
+| **Overview** | Firm thesis, practice areas, and target markets |
+| **Circuit Map** | Interactive D3 map of all 12 federal circuits with strategic node rationale |
+| **Phases** | Growth roadmap from Phase Zero (foundation) through national expansion |
+| **AI Engine** | AI usage policy, tool governance, and verification workflows |
+| **Financials** | Revenue projections, cost model, and unit economics by phase |
+| **Marketing** | Acquisition channels, referral networks, and brand strategy |
+| **Compliance** | Trust accounting, security baseline, and ethics controls |
+| **KPIs** | Performance metrics and risk matrix across all phases |
 
 ## Tech Stack
 
@@ -18,8 +25,8 @@ A concept dashboard for a litigation law firm, built with React, Vite, and D3.js
 |---|---|---|
 | React | 18 | UI components & state |
 | Vite | 6 | Dev server & bundler |
-| D3.js | 7 | SVG charts |
-| topojson-client | 3 | (reserved for geo features) |
+| D3.js | 7 | Interactive circuit map |
+| TopoJSON | 3 | US state geodata |
 
 ## Getting Started
 
@@ -46,12 +53,5 @@ nbnn-law-concept/
 ├── package.json
 ├── src/
 │   ├── main.jsx        # React root mount
-│   └── App.jsx         # Dashboard (charts, table, KPIs)
+│   └── App.jsx         # All sections, styles, and D3 chart logic
 ```
-
-## Concepts Explored
-
-- Inline D3 rendering inside React refs (`useEffect` + `useRef`) without third-party chart wrappers
-- Single-file design token pattern (constant `C` object) for consistent theming
-- Stateful filter + search on a client-side data set
-- Responsive grid layout using CSS Grid without a component library

@@ -171,37 +171,89 @@ body {
 
 /* ── Header ──────────────────────────────── */
 .header {
-  padding: 20px 32px;
-  border-bottom: 1px solid var(--border);
+  padding: 0 36px;
+  border-bottom: 1px solid rgba(42,58,78,0.6);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  backdrop-filter: blur(12px);
-  background: rgba(10,14,23,0.85);
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  background: rgba(10,14,23,0.96);
+  height: 72px;
+  gap: 32px;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 340px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold) 0%, var(--accent2) 55%, transparent 100%);
+  opacity: 0.55;
 }
 
 .logo-group {
   display: flex;
-  align-items: baseline;
-  gap: 14px;
+  align-items: center;
+  gap: 18px;
+  flex-shrink: 0;
 }
 
-.logo {
+.logo-lockup {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.logo-wordmark {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1;
+}
+
+.logo-nbnn {
   font-family: 'Instrument Serif', serif;
   font-size: 20px;
-  color: var(--accent);
+  color: var(--gold);
   letter-spacing: -0.3px;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+
+.logo-law {
+  font-family: 'Instrument Serif', serif;
+  font-style: italic;
+  font-size: 13px;
+  color: var(--text2);
+  letter-spacing: 0.2px;
+  line-height: 1;
+}
+
+.logo-rule {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold) 0%, rgba(201,169,110,0.15) 100%);
 }
 
 .logo-sub {
-  font-size: 11px;
+  font-size: 8px;
   text-transform: uppercase;
-  letter-spacing: 3px;
+  letter-spacing: 3.2px;
   color: var(--text2);
   font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.logo-vert-divider {
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(180deg, transparent, var(--border) 30%, var(--border) 70%, transparent);
+  flex-shrink: 0;
 }
 
 /* ── Nav ──────────────────────────────── */
@@ -789,7 +841,9 @@ body {
   .grid-3, .control-grid, .kpi-grid { grid-template-columns: repeat(2, 1fr); }
   .nav { flex-wrap: wrap; }
   .content { padding: 24px 20px; }
-  .header { flex-direction: column; gap: 12px; padding: 16px; }
+  .header { flex-direction: column; align-items: flex-start; gap: 14px; padding: 14px 20px; height: auto; }
+  .logo-vert-divider { display: none; }
+  .header::after { width: 100%; }
 }
 
 @media (max-width: 640px) {
@@ -898,7 +952,7 @@ function CircuitMap() {
 function OverviewSection() {
   return (
     <div>
-      <h1 className="section-title">Ngehsi Brendan Ngwa Nforbi, Attorneys at Law — Unified Business Plan</h1>
+      <h1 className="section-title">Ngehsi Brendan Ngwa Nforbi, Attorneys at Law</h1>
       <p className="section-subtitle">
         An AI-native, multi-track plaintiff litigation firm built to collapse the cost of legal production while
         capturing underserved markets in civil rights, state torts, and immigration law. Compliance-first.
@@ -1915,8 +1969,15 @@ export default function App() {
       <div className="app">
         <header className="header">
           <div className="logo-group">
-            <span className="logo">Ngehsi Brendan Ngwa Nforbi, Attorneys at Law</span>
-            <span className="logo-sub">Guerrilla Litigation · Maximum Accountability</span>
+            <div className="logo-lockup">
+              <div className="logo-wordmark">
+                <span className="logo-nbnn">Ngehsi Brendan Ngwa Nforbi</span>
+                <span className="logo-law">Attorneys at Law</span>
+              </div>
+              <div className="logo-rule" />
+              <span className="logo-sub">Guerrilla Litigation · Maximum Accountability</span>
+            </div>
+            <div className="logo-vert-divider" />
           </div>
           <nav className="nav">
             {SECTIONS.map(s => (
