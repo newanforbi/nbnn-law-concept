@@ -63,6 +63,12 @@ const NODES = [
   { city: "Kansas City, MO",    circuit: "8th", lat: 39.10, lng: -94.58, rationale: "Police department controversies; employment and municipal liability cases." },
   // ── 9th Circuit ──────────────────────────────────────────────────
   { city: "Sacramento / Stockton, CA", circuit: "9th (Base)", lat: 38.58, lng: -121.49, rationale: "EDCA proximity, state agencies, high-density parole/probation populations. HOME BASE." },
+  { city: "San Francisco, CA",  circuit: "9th", lat: 37.77, lng: -122.42, rationale: "N.D. Cal. — major civil rights and tech employment discrimination docket; progressive bench." },
+  { city: "Oakland, CA",        circuit: "9th", lat: 37.80, lng: -122.27, rationale: "N.D. Cal. — deep police misconduct history; sustained civil rights litigation pipeline." },
+  { city: "San Jose, CA",       circuit: "9th", lat: 37.34, lng: -121.89, rationale: "N.D. Cal. — tech-sector employment discrimination and wage theft cases." },
+  { city: "Fresno, CA",         circuit: "9th", lat: 36.74, lng: -119.79, rationale: "E.D. Cal. — agricultural labor rights; farmworker civil rights and §1983 claims." },
+  { city: "Bakersfield, CA",    circuit: "9th", lat: 35.37, lng: -119.02, rationale: "E.D. Cal. — agricultural and oil-industry workplace litigation; underserved plaintiff bar." },
+  { city: "San Bernardino, CA", circuit: "9th", lat: 34.11, lng: -117.29, rationale: "C.D. Cal. — police misconduct and immigration enforcement litigation." },
   { city: "Los Angeles, CA",    circuit: "9th", lat: 34.05, lng: -118.24, rationale: "Largest civil-rights litigation ecosystem in America; massive police and jail litigation." },
   { city: "Phoenix, AZ",        circuit: "9th", lat: 33.45, lng: -112.07, rationale: "Immigration detention litigation; police misconduct cases." },
   // ── 10th Circuit ─────────────────────────────────────────────────
@@ -1029,6 +1035,12 @@ const NODE_LABEL_OFFSETS = {
   "Kansas City, MO":                 { dx: -9, dy:  7, anchor: "end"   },
   // 9th Circuit
   "Sacramento / Stockton, CA":       { dx:  9, dy: 18, anchor: "start" },
+  "San Francisco, CA":               { dx: -9, dy: -8, anchor: "end"   },
+  "Oakland, CA":                     { dx:  9, dy: -8, anchor: "start" },
+  "San Jose, CA":                    { dx:  9, dy:  7, anchor: "start" },
+  "Fresno, CA":                      { dx:  9, dy: -8, anchor: "start" },
+  "Bakersfield, CA":                 { dx:  9, dy:  7, anchor: "start" },
+  "San Bernardino, CA":              { dx:  9, dy:  7, anchor: "start" },
   "Los Angeles, CA":                 { dx: -9, dy: -8, anchor: "end"   },
   "Phoenix, AZ":                     { dx:  9, dy:  7, anchor: "start" },
   // 10th Circuit
