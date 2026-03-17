@@ -1056,6 +1056,20 @@ const NODE_LABEL_OFFSETS = {
   "Silver Spring, MD":               { dx:  9, dy: -8, anchor: "start" },
 };
 
+// Cities whose labels are pulled off-map with leader lines
+const WEST_CALLOUT = new Set([
+  "San Francisco, CA", "Oakland, CA", "San Jose, CA",
+  "Sacramento / Stockton, CA", "Fresno, CA", "Bakersfield, CA",
+  "Los Angeles, CA", "San Bernardino, CA", "Phoenix, AZ",
+]);
+const EAST_CALLOUT = new Set([
+  "Portland, ME", "Boston, MA", "Providence, RI",
+  "New York City / Brooklyn, NY", "Buffalo, NY", "Hartford, CT",
+  "Philadelphia / Newark", "Pittsburgh, PA", "Camden, NJ",
+  "Alexandria / Baltimore", "Washington, D.C.", "Silver Spring, MD",
+  "Richmond, VA", "Charlotte, NC",
+]);
+
 function CircuitMap() {
   const svgRef = useRef(null);
   const [tooltip, setTooltip] = useState(null);
@@ -1235,8 +1249,9 @@ function CircuitMap() {
                     letterSpacing="1.5"
                   >HQ</text>
                 )}
-                {/* City name label */}
+                {/* City name label (skipped for callout cities) */}
                 {(() => {
+                  if (WEST_CALLOUT.has(n.city) || EAST_CALLOUT.has(n.city)) return null;
                   const off = NODE_LABEL_OFFSETS[n.city] || { dx: 9, dy: -8, anchor: "start" };
                   const shortName = n.city.split(" / ")[0].split(", ")[0];
                   return (
@@ -1252,6 +1267,71 @@ function CircuitMap() {
               </g>
             );
           })}
+
+          {/* ── West coast callout panel (Pacific Ocean) ─────────────── */}
+          {(() => {
+            const CALLOUT_X = 66;   // right edge of label column
+            const MIN_GAP  = 13;    // minimum px between label rows
+            const cities = NODES
+              .filter(n => WEST_CALLOUT.has(n.city))
+              .map(n => { const p = projection([n.lng, n.lat]); return p ? { n, cx: p[0], cy: p[1] } : null; })
+              .filter(Boolean)
+              .sort((a, b) => a.cy - b.cy);
+            // Push labels apart so they never overlap
+            const labelYs = [];
+            cities.forEach(({ cy }, i) => {
+              if (i === 0) { labelYs.push(cy); return; }
+              labelYs.push(Math.max(cy, labelYs[i - 1] + MIN_GAP));
+            });
+            return cities.map(({ n, cx, cy }, i) => {
+              const col = getCircuitColor(n.circuit);
+              const shortName = n.city.split(" / ")[0].split(", ")[0];
+              const ly = labelYs[i];
+              return (
+                <g key={`wc-${n.city}`}>
+                  <polyline
+                    points={`${cx},${cy} ${CALLOUT_X + 3},${ly}`}
+                    fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
+                  />
+                  <text x={CALLOUT_X} y={ly + 3.5}
+                    className="node-city-label" fill={col} textAnchor="end" fillOpacity="0.9"
+                  >{shortName}</text>
+                </g>
+              );
+            });
+          })()}
+
+          {/* ── East coast callout panel (Atlantic Ocean) ────────────── */}
+          {(() => {
+            const CALLOUT_X = 896;  // left edge of label column
+            const MIN_GAP  = 13;
+            const cities = NODES
+              .filter(n => EAST_CALLOUT.has(n.city))
+              .map(n => { const p = projection([n.lng, n.lat]); return p ? { n, cx: p[0], cy: p[1] } : null; })
+              .filter(Boolean)
+              .sort((a, b) => a.cy - b.cy);
+            const labelYs = [];
+            cities.forEach(({ cy }, i) => {
+              if (i === 0) { labelYs.push(cy); return; }
+              labelYs.push(Math.max(cy, labelYs[i - 1] + MIN_GAP));
+            });
+            return cities.map(({ n, cx, cy }, i) => {
+              const col = getCircuitColor(n.circuit);
+              const shortName = n.city.split(" / ")[0].split(", ")[0];
+              const ly = labelYs[i];
+              return (
+                <g key={`ec-${n.city}`}>
+                  <polyline
+                    points={`${cx},${cy} ${CALLOUT_X - 3},${ly}`}
+                    fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
+                  />
+                  <text x={CALLOUT_X} y={ly + 3.5}
+                    className="node-city-label" fill={col} textAnchor="start" fillOpacity="0.9"
+                  >{shortName}</text>
+                </g>
+              );
+            });
+          })()}
         </svg>
 
         <div className="map-legend">
