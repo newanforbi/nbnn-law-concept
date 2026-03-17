@@ -179,9 +179,6 @@ body {
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   background: rgba(10,14,23,0.96);
-  position: sticky;
-  top: 0;
-  z-index: 100;
   height: 72px;
   gap: 32px;
 }
