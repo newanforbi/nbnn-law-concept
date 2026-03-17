@@ -1058,16 +1058,12 @@ const NODE_LABEL_OFFSETS = {
 
 // Cities whose labels are pulled off-map with leader lines
 const WEST_CALLOUT = new Set([
-  "San Francisco, CA", "Oakland, CA", "San Jose, CA",
-  "Sacramento / Stockton, CA", "Fresno, CA", "Bakersfield, CA",
-  "Los Angeles, CA", "San Bernardino, CA", "Phoenix, AZ",
+  "San Francisco, CA", "Oakland, CA", "San Jose, CA", "Bakersfield, CA",
 ]);
 const EAST_CALLOUT = new Set([
-  "Portland, ME", "Boston, MA", "Providence, RI",
-  "New York City / Brooklyn, NY", "Buffalo, NY", "Hartford, CT",
-  "Philadelphia / Newark", "Pittsburgh, PA", "Camden, NJ",
+  "Providence, RI", "Buffalo, NY", "Hartford, CT",
+  "Pittsburgh, PA", "Camden, NJ",
   "Alexandria / Baltimore", "Washington, D.C.", "Silver Spring, MD",
-  "Richmond, VA", "Charlotte, NC",
 ]);
 
 function CircuitMap() {
@@ -1270,7 +1266,7 @@ function CircuitMap() {
 
           {/* ── West coast callout panel (Pacific Ocean) ─────────────── */}
           {(() => {
-            const CALLOUT_X = 66;   // right edge of label column
+            const CALLOUT_X = 90;   // right edge of label column
             const MIN_GAP  = 13;    // minimum px between label rows
             const cities = NODES
               .filter(n => WEST_CALLOUT.has(n.city))
@@ -1303,7 +1299,7 @@ function CircuitMap() {
 
           {/* ── East coast callout panel (Atlantic Ocean) ────────────── */}
           {(() => {
-            const CALLOUT_X = 896;  // left edge of label column
+            const CALLOUT_X = 872;  // left edge of label column
             const MIN_GAP  = 13;
             const cities = NODES
               .filter(n => EAST_CALLOUT.has(n.city))
