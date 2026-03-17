@@ -589,6 +589,37 @@ body {
   line-height: 1.6;
 }
 
+/* ── State hover circuit badge ────── */
+.circuit-badge {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  padding: 5px 11px;
+  border-radius: 6px;
+  border: 1px solid;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+  animation: tooltipIn 0.15s ease;
+  backdrop-filter: blur(6px);
+}
+
+/* ── Node city labels ─────────────── */
+.node-city-label {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  pointer-events: none;
+  paint-order: stroke fill;
+  stroke: #0A0E17;
+  stroke-width: 3px;
+  stroke-linejoin: round;
+}
+
 /* ── Phase timeline ──────────────── */
 .phase-timeline {
   display: flex;
@@ -927,11 +958,28 @@ function getCircuitColor(circuitId) {
   return found ? found.color : "#D4A574";
 }
 
+// Per-node label offsets to avoid east-coast overlap
+const NODE_LABEL_OFFSETS = {
+  "1st":        { dx:  9, dy: -8, anchor: "start" },
+  "2nd":        { dx: -9, dy: -8, anchor: "end"   },
+  "3rd":        { dx:  9, dy:  7, anchor: "start" },
+  "4th":        { dx: -9, dy: -8, anchor: "end"   },
+  "5th":        { dx:  9, dy:  7, anchor: "start" },
+  "6th":        { dx:  9, dy: -8, anchor: "start" },
+  "7th":        { dx: -9, dy: -8, anchor: "end"   },
+  "8th":        { dx:  9, dy:  7, anchor: "start" },
+  "9th (Base)": { dx:  9, dy: 18, anchor: "start" },
+  "10th":       { dx:  9, dy: -8, anchor: "start" },
+  "11th":       { dx:  9, dy:  7, anchor: "start" },
+  "D.C.":       { dx: -9, dy:  7, anchor: "end"   },
+};
+
 function CircuitMap() {
   const svgRef = useRef(null);
   const [tooltip, setTooltip] = useState(null);
   const [geoData, setGeoData] = useState(null);
   const [hoveredCircuit, setHoveredCircuit] = useState(null);
+  const [stateLabel, setStateLabel] = useState(null);
 
   useEffect(() => {
     fetch("https://cdn.jsdelivr.net/npm/us-atlas@3/states-10m.json")
@@ -1003,8 +1051,20 @@ function CircuitMap() {
                 className={`state${isActive ? " circuit-active" : ""}${isDimmed ? " circuit-dimmed" : ""}`}
                 d={pathGen(f) || ""}
                 fill={circuit ? circuit.color + "88" : "#1C2535"}
-                onMouseEnter={() => circuit && setHoveredCircuit(normalizeCircuitId(circuit.id))}
-                onMouseLeave={() => !tooltip && setHoveredCircuit(null)}
+                onMouseEnter={(e) => {
+                  if (circuit) {
+                    const nid = normalizeCircuitId(circuit.id);
+                    setHoveredCircuit(nid);
+                    setStateLabel({ id: nid, color: circuit.color, x: e.clientX, y: e.clientY });
+                  }
+                }}
+                onMouseMove={(e) => {
+                  if (stateLabel) setStateLabel(sl => sl && ({ ...sl, x: e.clientX, y: e.clientY }));
+                }}
+                onMouseLeave={() => {
+                  if (!tooltip) setHoveredCircuit(null);
+                  setStateLabel(null);
+                }}
               />
             );
           })}
@@ -1082,7 +1142,7 @@ function CircuitMap() {
                     onMouseLeave={handleNodeLeave}
                   />
                 )}
-                {/* HQ label */}
+                {/* HQ badge */}
                 {isHQ && (
                   <text
                     x={cx + 13} y={cy - 11}
@@ -1093,6 +1153,20 @@ function CircuitMap() {
                     letterSpacing="1.5"
                   >HQ</text>
                 )}
+                {/* City name label */}
+                {(() => {
+                  const off = NODE_LABEL_OFFSETS[n.circuit] || { dx: 9, dy: -8, anchor: "start" };
+                  const shortName = n.city.split(" / ")[0].split(", ")[0];
+                  return (
+                    <text
+                      x={cx + off.dx} y={cy + off.dy}
+                      className="node-city-label"
+                      fill={col}
+                      textAnchor={off.anchor}
+                      fillOpacity="0.9"
+                    >{shortName}</text>
+                  );
+                })()}
               </g>
             );
           })}
@@ -1134,6 +1208,21 @@ function CircuitMap() {
           </div>
         );
       })()}
+
+      {stateLabel && !tooltip && (
+        <div
+          className="circuit-badge"
+          style={{
+            left: stateLabel.x + 14,
+            top:  stateLabel.y - 28,
+            color: stateLabel.color,
+            borderColor: stateLabel.color + "88",
+            background: `color-mix(in srgb, ${stateLabel.color} 12%, #0A0E17)`,
+          }}
+        >
+          {stateLabel.id} Circuit
+        </div>
+      )}
     </>
   );
 }
