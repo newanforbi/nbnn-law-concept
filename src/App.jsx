@@ -1061,9 +1061,8 @@ const WEST_CALLOUT = new Set([
   "San Francisco, CA", "Oakland, CA", "San Jose, CA", "Bakersfield, CA",
 ]);
 const EAST_CALLOUT = new Set([
-  "Providence, RI", "Buffalo, NY", "Hartford, CT",
-  "Pittsburgh, PA", "Camden, NJ",
-  "Alexandria / Baltimore", "Washington, D.C.", "Silver Spring, MD",
+  "Buffalo, NY", "Hartford, CT", "Camden, NJ",
+  "Alexandria / Baltimore", "Silver Spring, MD",
 ]);
 
 function CircuitMap() {
@@ -1299,7 +1298,7 @@ function CircuitMap() {
 
           {/* ── East coast callout panel (Atlantic Ocean) ────────────── */}
           {(() => {
-            const CALLOUT_X = 872;  // left edge of label column
+            const CALLOUT_X = 852;  // left edge of label column
             const MIN_GAP  = 13;
             const cities = NODES
               .filter(n => EAST_CALLOUT.has(n.city))
