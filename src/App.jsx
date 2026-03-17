@@ -29,18 +29,59 @@ const fipsToCircuit = {};
 CIRCUITS.forEach(c => c.states.forEach(s => { if (STATE_FIPS[s]) fipsToCircuit[STATE_FIPS[s]] = c; }));
 
 const NODES = [
-  { city: "Boston, MA", circuit: "1st", lat: 42.36, lng: -71.06, rationale: "High-density immigrant populations; progressive courts favorable to civil rights claims." },
+  // ── 1st Circuit ──────────────────────────────────────────────────
+  { city: "Boston, MA",         circuit: "1st", lat: 42.36, lng: -71.06, rationale: "High-density immigrant populations; progressive courts favorable to civil rights claims." },
+  { city: "Providence, RI",     circuit: "1st", lat: 41.82, lng: -71.41, rationale: "Very active federal civil-rights docket; Brown University and hospital systems generate employment and discrimination cases." },
+  { city: "Portland, ME",       circuit: "1st", lat: 43.66, lng: -70.26, rationale: "Smaller bar means less competition; strong wrongful arrest and maritime injury cases." },
+  // ── 2nd Circuit ──────────────────────────────────────────────────
   { city: "New York City / Brooklyn, NY", circuit: "2nd", lat: 40.68, lng: -73.94, rationale: "Massive immigration dockets; high volume of municipal liability and police misconduct claims." },
+  { city: "Buffalo, NY",        circuit: "2nd", lat: 42.89, lng: -78.88, rationale: "Border enforcement litigation; ICE detention and immigration suits." },
+  { city: "Hartford, CT",       circuit: "2nd", lat: 41.77, lng: -72.68, rationale: "Insurance litigation hub; strong employment discrimination cases." },
+  // ── 3rd Circuit ──────────────────────────────────────────────────
   { city: "Philadelphia / Newark", circuit: "3rd", lat: 40.00, lng: -75.13, rationale: "Dense urban civil rights claims; Newark holds 90K+ pending EOIR immigration cases." },
+  { city: "Pittsburgh, PA",     circuit: "3rd", lat: 40.44, lng: -80.00, rationale: "Police misconduct cases; active medical malpractice ecosystem." },
+  { city: "Camden, NJ",         circuit: "3rd", lat: 39.93, lng: -75.12, rationale: "Historically troubled police department creates a deep civil-rights litigation pipeline." },
+  // ── 4th Circuit ──────────────────────────────────────────────────
   { city: "Alexandria / Baltimore", circuit: "4th", lat: 39.28, lng: -76.62, rationale: "Federal agency proximity; Alexandria 'Rocket Docket'; heavy police misconduct volume." },
+  { city: "Richmond, VA",       circuit: "4th", lat: 37.54, lng: -77.44, rationale: "State capital — constitutional litigation and prisoner civil-rights claims." },
+  { city: "Charlotte, NC",      circuit: "4th", lat: 35.23, lng: -80.84, rationale: "Massive employment discrimination docket; banking whistleblower cases." },
+  // ── 5th Circuit ──────────────────────────────────────────────────
   { city: "Houston / El Paso, TX", circuit: "5th", lat: 29.76, lng: -95.37, rationale: "Critical for immigration detention, border enforcement litigation, mass deportation challenges." },
-  { city: "Detroit, MI", circuit: "6th", lat: 42.33, lng: -83.05, rationale: "High poverty rates, significant municipal liability, heavily underserved plaintiff bar." },
-  { city: "Chicago, IL", circuit: "7th", lat: 41.88, lng: -87.63, rationale: "Core Midwest hub; exceptionally high §1983 and excessive force litigation volume." },
-  { city: "St. Louis, MO", circuit: "8th", lat: 38.63, lng: -90.20, rationale: "Protest-related litigation, jail condition claims, police force accountability." },
+  { city: "New Orleans, LA",    circuit: "5th", lat: 29.95, lng: -90.07, rationale: "Police misconduct and jail conditions; hurricane and insurance litigation." },
+  { city: "San Antonio, TX",    circuit: "5th", lat: 29.42, lng: -98.49, rationale: "Immigration detention litigation; civil-rights suits against local agencies." },
+  // ── 6th Circuit ──────────────────────────────────────────────────
+  { city: "Detroit, MI",        circuit: "6th", lat: 42.33, lng: -83.05, rationale: "High poverty rates, significant municipal liability, heavily underserved plaintiff bar." },
+  { city: "Cleveland, OH",      circuit: "6th", lat: 41.50, lng: -81.69, rationale: "Police reform consent decree legacy; strong §1983 litigation pipeline." },
+  { city: "Memphis, TN",        circuit: "6th", lat: 35.15, lng: -90.05, rationale: "Police brutality cases; prisoner civil-rights litigation." },
+  // ── 7th Circuit ──────────────────────────────────────────────────
+  { city: "Chicago, IL",        circuit: "7th", lat: 41.88, lng: -87.63, rationale: "Core Midwest hub; exceptionally high §1983 and excessive force litigation volume." },
+  { city: "Milwaukee, WI",      circuit: "7th", lat: 43.04, lng: -87.91, rationale: "High police litigation activity; prisoner rights claims." },
+  { city: "Indianapolis, IN",   circuit: "7th", lat: 39.77, lng: -86.16, rationale: "Federal civil rights and employment discrimination." },
+  // ── 8th Circuit ──────────────────────────────────────────────────
+  { city: "St. Louis, MO",      circuit: "8th", lat: 38.63, lng: -90.20, rationale: "Protest-related litigation, jail condition claims, police force accountability." },
+  { city: "Minneapolis, MN",    circuit: "8th", lat: 44.98, lng: -93.27, rationale: "Post-George Floyd police reform litigation; civil-rights impact cases." },
+  { city: "Kansas City, MO",    circuit: "8th", lat: 39.10, lng: -94.58, rationale: "Police department controversies; employment and municipal liability cases." },
+  // ── 9th Circuit ──────────────────────────────────────────────────
   { city: "Sacramento / Stockton, CA", circuit: "9th (Base)", lat: 38.58, lng: -121.49, rationale: "EDCA proximity, state agencies, high-density parole/probation populations. HOME BASE." },
+  { city: "San Francisco, CA",  circuit: "9th", lat: 37.77, lng: -122.42, rationale: "N.D. Cal. — major civil rights and tech employment discrimination docket; progressive bench." },
+  { city: "Oakland, CA",        circuit: "9th", lat: 37.80, lng: -122.27, rationale: "N.D. Cal. — deep police misconduct history; sustained civil rights litigation pipeline." },
+  { city: "San Jose, CA",       circuit: "9th", lat: 37.34, lng: -121.89, rationale: "N.D. Cal. — tech-sector employment discrimination and wage theft cases." },
+  { city: "Fresno, CA",         circuit: "9th", lat: 36.74, lng: -119.79, rationale: "E.D. Cal. — agricultural labor rights; farmworker civil rights and §1983 claims." },
+  { city: "Bakersfield, CA",    circuit: "9th", lat: 35.37, lng: -119.02, rationale: "E.D. Cal. — agricultural and oil-industry workplace litigation; underserved plaintiff bar." },
+  { city: "San Bernardino, CA", circuit: "9th", lat: 34.11, lng: -117.29, rationale: "C.D. Cal. — police misconduct and immigration enforcement litigation." },
+  { city: "Los Angeles, CA",    circuit: "9th", lat: 34.05, lng: -118.24, rationale: "Largest civil-rights litigation ecosystem in America; massive police and jail litigation." },
+  { city: "Phoenix, AZ",        circuit: "9th", lat: 33.45, lng: -112.07, rationale: "Immigration detention litigation; police misconduct cases." },
+  // ── 10th Circuit ─────────────────────────────────────────────────
   { city: "Denver / Albuquerque", circuit: "10th", lat: 39.74, lng: -104.99, rationale: "Growing immigration hubs; Native American jurisdiction overlaps." },
-  { city: "Atlanta / Miami", circuit: "11th", lat: 33.75, lng: -84.39, rationale: "Massive ICE detention footprint; heavy immigration and civil rights dockets." },
-  { city: "Washington, D.C.", circuit: "D.C.", lat: 38.91, lng: -77.04, rationale: "Essential for APA/Mandamus against USCIS, DHS, DOJ headquarters." },
+  { city: "Salt Lake City, UT", circuit: "10th", lat: 40.76, lng: -111.89, rationale: "Police misconduct and religious employment disputes." },
+  { city: "Oklahoma City, OK",  circuit: "10th", lat: 35.47, lng: -97.52, rationale: "Prisoner civil-rights and jail litigation." },
+  // ── 11th Circuit ─────────────────────────────────────────────────
+  { city: "Atlanta / Miami",    circuit: "11th", lat: 33.75, lng: -84.39, rationale: "Massive ICE detention footprint; heavy immigration and civil rights dockets." },
+  { city: "Orlando, FL",        circuit: "11th", lat: 28.54, lng: -81.38, rationale: "Massive employment discrimination docket; theme-park employment litigation." },
+  { city: "Birmingham, AL",     circuit: "11th", lat: 33.52, lng: -86.81, rationale: "Historic civil-rights litigation venue; police and prison cases." },
+  // ── D.C. Circuit ─────────────────────────────────────────────────
+  { city: "Washington, D.C.",   circuit: "D.C.", lat: 38.91, lng: -77.04, rationale: "Essential for APA/Mandamus against USCIS, DHS, DOJ headquarters." },
+  { city: "Silver Spring, MD",  circuit: "D.C.", lat: 38.99, lng: -77.03, rationale: "Federal employee litigation hub near agency headquarters." },
 ];
 
 // ── Section data ──────────────────────────────────────────────────
@@ -958,21 +999,72 @@ function getCircuitColor(circuitId) {
   return found ? found.color : "#D4A574";
 }
 
-// Per-node label offsets to avoid east-coast overlap
+// Per-city label offsets (dx, dy from dot center; anchor = SVG text-anchor)
 const NODE_LABEL_OFFSETS = {
-  "1st":        { dx:  9, dy: -8, anchor: "start" },
-  "2nd":        { dx: -9, dy: -8, anchor: "end"   },
-  "3rd":        { dx:  9, dy:  7, anchor: "start" },
-  "4th":        { dx: -9, dy: -8, anchor: "end"   },
-  "5th":        { dx:  9, dy:  7, anchor: "start" },
-  "6th":        { dx:  9, dy: -8, anchor: "start" },
-  "7th":        { dx: -9, dy: -8, anchor: "end"   },
-  "8th":        { dx:  9, dy:  7, anchor: "start" },
-  "9th (Base)": { dx:  9, dy: 18, anchor: "start" },
-  "10th":       { dx:  9, dy: -8, anchor: "start" },
-  "11th":       { dx:  9, dy:  7, anchor: "start" },
-  "D.C.":       { dx: -9, dy:  7, anchor: "end"   },
+  // 1st Circuit
+  "Boston, MA":                     { dx:  9, dy: -8, anchor: "start" },
+  "Providence, RI":                  { dx:  9, dy:  7, anchor: "start" },
+  "Portland, ME":                    { dx:  9, dy: -8, anchor: "start" },
+  // 2nd Circuit
+  "New York City / Brooklyn, NY":    { dx: -9, dy: -8, anchor: "end"   },
+  "Buffalo, NY":                     { dx: -9, dy: -8, anchor: "end"   },
+  "Hartford, CT":                    { dx:  9, dy:  7, anchor: "start" },
+  // 3rd Circuit
+  "Philadelphia / Newark":           { dx:  9, dy:  7, anchor: "start" },
+  "Pittsburgh, PA":                  { dx: -9, dy: -8, anchor: "end"   },
+  "Camden, NJ":                      { dx: -9, dy:  7, anchor: "end"   },
+  // 4th Circuit
+  "Alexandria / Baltimore":          { dx: -9, dy: -8, anchor: "end"   },
+  "Richmond, VA":                    { dx:  9, dy:  7, anchor: "start" },
+  "Charlotte, NC":                   { dx:  9, dy: -8, anchor: "start" },
+  // 5th Circuit
+  "Houston / El Paso, TX":           { dx:  9, dy:  7, anchor: "start" },
+  "New Orleans, LA":                 { dx:  9, dy: -8, anchor: "start" },
+  "San Antonio, TX":                 { dx: -9, dy:  7, anchor: "end"   },
+  // 6th Circuit
+  "Detroit, MI":                     { dx:  9, dy: -8, anchor: "start" },
+  "Cleveland, OH":                   { dx:  9, dy:  7, anchor: "start" },
+  "Memphis, TN":                     { dx:  9, dy: -8, anchor: "start" },
+  // 7th Circuit
+  "Chicago, IL":                     { dx: -9, dy: -8, anchor: "end"   },
+  "Milwaukee, WI":                   { dx: -9, dy:  7, anchor: "end"   },
+  "Indianapolis, IN":                { dx:  9, dy:  7, anchor: "start" },
+  // 8th Circuit
+  "St. Louis, MO":                   { dx:  9, dy:  7, anchor: "start" },
+  "Minneapolis, MN":                 { dx: -9, dy: -8, anchor: "end"   },
+  "Kansas City, MO":                 { dx: -9, dy:  7, anchor: "end"   },
+  // 9th Circuit
+  "Sacramento / Stockton, CA":       { dx:  9, dy: 18, anchor: "start" },
+  "San Francisco, CA":               { dx: -9, dy: -8, anchor: "end"   },
+  "Oakland, CA":                     { dx:  9, dy: -8, anchor: "start" },
+  "San Jose, CA":                    { dx:  9, dy:  7, anchor: "start" },
+  "Fresno, CA":                      { dx:  9, dy: -8, anchor: "start" },
+  "Bakersfield, CA":                 { dx:  9, dy:  7, anchor: "start" },
+  "San Bernardino, CA":              { dx:  9, dy:  7, anchor: "start" },
+  "Los Angeles, CA":                 { dx: -9, dy: -8, anchor: "end"   },
+  "Phoenix, AZ":                     { dx:  9, dy:  7, anchor: "start" },
+  // 10th Circuit
+  "Denver / Albuquerque":            { dx:  9, dy: -8, anchor: "start" },
+  "Salt Lake City, UT":              { dx: -9, dy: -8, anchor: "end"   },
+  "Oklahoma City, OK":               { dx:  9, dy:  7, anchor: "start" },
+  // 11th Circuit
+  "Atlanta / Miami":                 { dx:  9, dy:  7, anchor: "start" },
+  "Orlando, FL":                     { dx:  9, dy: -8, anchor: "start" },
+  "Birmingham, AL":                  { dx: -9, dy:  7, anchor: "end"   },
+  // D.C. Circuit
+  "Washington, D.C.":                { dx: -9, dy:  7, anchor: "end"   },
+  "Silver Spring, MD":               { dx:  9, dy: -8, anchor: "start" },
 };
+
+// Cities whose labels are pulled off-map with leader lines
+const WEST_CALLOUT = new Set([
+  "San Francisco, CA", "Oakland, CA", "San Jose, CA", "Bakersfield, CA",
+]);
+const EAST_CALLOUT = new Set([
+  "Providence, RI", "Buffalo, NY", "Hartford, CT",
+  "Pittsburgh, PA", "Camden, NJ",
+  "Alexandria / Baltimore", "Washington, D.C.", "Silver Spring, MD",
+]);
 
 function CircuitMap() {
   const svgRef = useRef(null);
@@ -1153,9 +1245,10 @@ function CircuitMap() {
                     letterSpacing="1.5"
                   >HQ</text>
                 )}
-                {/* City name label */}
+                {/* City name label (skipped for callout cities) */}
                 {(() => {
-                  const off = NODE_LABEL_OFFSETS[n.circuit] || { dx: 9, dy: -8, anchor: "start" };
+                  if (WEST_CALLOUT.has(n.city) || EAST_CALLOUT.has(n.city)) return null;
+                  const off = NODE_LABEL_OFFSETS[n.city] || { dx: 9, dy: -8, anchor: "start" };
                   const shortName = n.city.split(" / ")[0].split(", ")[0];
                   return (
                     <text
@@ -1170,6 +1263,71 @@ function CircuitMap() {
               </g>
             );
           })}
+
+          {/* ── West coast callout panel (Pacific Ocean) ─────────────── */}
+          {(() => {
+            const CALLOUT_X = 90;   // right edge of label column
+            const MIN_GAP  = 13;    // minimum px between label rows
+            const cities = NODES
+              .filter(n => WEST_CALLOUT.has(n.city))
+              .map(n => { const p = projection([n.lng, n.lat]); return p ? { n, cx: p[0], cy: p[1] } : null; })
+              .filter(Boolean)
+              .sort((a, b) => a.cy - b.cy);
+            // Push labels apart so they never overlap
+            const labelYs = [];
+            cities.forEach(({ cy }, i) => {
+              if (i === 0) { labelYs.push(cy); return; }
+              labelYs.push(Math.max(cy, labelYs[i - 1] + MIN_GAP));
+            });
+            return cities.map(({ n, cx, cy }, i) => {
+              const col = getCircuitColor(n.circuit);
+              const shortName = n.city.split(" / ")[0].split(", ")[0];
+              const ly = labelYs[i];
+              return (
+                <g key={`wc-${n.city}`}>
+                  <polyline
+                    points={`${cx},${cy} ${CALLOUT_X + 3},${ly}`}
+                    fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
+                  />
+                  <text x={CALLOUT_X} y={ly + 3.5}
+                    className="node-city-label" fill={col} textAnchor="end" fillOpacity="0.9"
+                  >{shortName}</text>
+                </g>
+              );
+            });
+          })()}
+
+          {/* ── East coast callout panel (Atlantic Ocean) ────────────── */}
+          {(() => {
+            const CALLOUT_X = 872;  // left edge of label column
+            const MIN_GAP  = 13;
+            const cities = NODES
+              .filter(n => EAST_CALLOUT.has(n.city))
+              .map(n => { const p = projection([n.lng, n.lat]); return p ? { n, cx: p[0], cy: p[1] } : null; })
+              .filter(Boolean)
+              .sort((a, b) => a.cy - b.cy);
+            const labelYs = [];
+            cities.forEach(({ cy }, i) => {
+              if (i === 0) { labelYs.push(cy); return; }
+              labelYs.push(Math.max(cy, labelYs[i - 1] + MIN_GAP));
+            });
+            return cities.map(({ n, cx, cy }, i) => {
+              const col = getCircuitColor(n.circuit);
+              const shortName = n.city.split(" / ")[0].split(", ")[0];
+              const ly = labelYs[i];
+              return (
+                <g key={`ec-${n.city}`}>
+                  <polyline
+                    points={`${cx},${cy} ${CALLOUT_X - 3},${ly}`}
+                    fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
+                  />
+                  <text x={CALLOUT_X} y={ly + 3.5}
+                    className="node-city-label" fill={col} textAnchor="start" fillOpacity="0.9"
+                  >{shortName}</text>
+                </g>
+              );
+            });
+          })()}
         </svg>
 
         <div className="map-legend">
