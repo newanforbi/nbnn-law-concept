@@ -1190,9 +1190,11 @@ function CircuitMap() {
           {NODES.map((n, i) => {
             const pos = projection([n.lng, n.lat]);
             if (!pos) return null;
-            const col   = getCircuitColor(n.circuit);
-            const isHQ  = n.circuit === "9th (Base)";
+            const col        = getCircuitColor(n.circuit);
+            const isHQ       = n.circuit === "9th (Base)";
             const cx = pos[0], cy = pos[1];
+            const normCircuit = normalizeCircuitId(n.circuit);
+            const labelFill   = hoveredCircuit && normCircuit === hoveredCircuit ? "#ffffff" : col;
             return (
               <g key={i} filter="url(#nodeGlow)">
                 {/* Animated outer pulse ring */}
@@ -1243,7 +1245,7 @@ function CircuitMap() {
                 {isHQ && (
                   <text
                     x={cx + 13} y={cy - 11}
-                    fill={col}
+                    fill={labelFill}
                     fontSize="9"
                     fontFamily="JetBrains Mono, monospace"
                     fontWeight="700"
@@ -1259,7 +1261,7 @@ function CircuitMap() {
                     <text
                       x={cx + off.dx} y={cy + off.dy}
                       className="node-city-label"
-                      fill={col}
+                      fill={labelFill}
                       textAnchor={off.anchor}
                       fillOpacity="0.9"
                     >{shortName}</text>
@@ -1288,6 +1290,8 @@ function CircuitMap() {
               const col = getCircuitColor(n.circuit);
               const shortName = n.city.split(" / ")[0].split(", ")[0];
               const ly = labelYs[i];
+              const normC = normalizeCircuitId(n.circuit);
+              const lblFill = hoveredCircuit && normC === hoveredCircuit ? "#ffffff" : col;
               return (
                 <g key={`wc-${n.city}`}>
                   <polyline
@@ -1295,7 +1299,7 @@ function CircuitMap() {
                     fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
                   />
                   <text x={CALLOUT_X} y={ly + 3.5}
-                    className="node-city-label" fill={col} textAnchor="end" fillOpacity="0.9"
+                    className="node-city-label" fill={lblFill} textAnchor="end" fillOpacity="0.9"
                   >{shortName}</text>
                 </g>
               );
@@ -1320,6 +1324,8 @@ function CircuitMap() {
               const col = getCircuitColor(n.circuit);
               const shortName = n.city.split(" / ")[0].split(", ")[0];
               const ly = labelYs[i] + (EAST_CALLOUT_NUDGE[n.city] || 0);
+              const normC = normalizeCircuitId(n.circuit);
+              const lblFill = hoveredCircuit && normC === hoveredCircuit ? "#ffffff" : col;
               return (
                 <g key={`ec-${n.city}`}>
                   <polyline
@@ -1327,7 +1333,7 @@ function CircuitMap() {
                     fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
                   />
                   <text x={CALLOUT_X} y={ly + 3.5}
-                    className="node-city-label" fill={col} textAnchor="start" fillOpacity="0.9"
+                    className="node-city-label" fill={lblFill} textAnchor="start" fillOpacity="0.9"
                   >{shortName}</text>
                 </g>
               );
