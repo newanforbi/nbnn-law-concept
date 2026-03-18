@@ -655,6 +655,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.4px;
   pointer-events: none;
+  transition: font-size 0.15s ease;
   paint-order: stroke fill;
   stroke: #0A0E17;
   stroke-width: 3px;
@@ -1034,7 +1035,7 @@ const NODE_LABEL_OFFSETS = {
   "Minneapolis, MN":                 { dx: -9, dy: -8, anchor: "end"   },
   "Kansas City, MO":                 { dx: -9, dy:  7, anchor: "end"   },
   // 9th Circuit
-  "Sacramento / Stockton, CA":       { dx: -13, dy:  4, anchor: "end"   },
+  "Sacramento / Stockton, CA":       { dx: 10, dy: -14, anchor: "end"   },
   "San Francisco, CA":               { dx: -9, dy: -8, anchor: "end"   },
   "Oakland, CA":                     { dx:  9, dy: -8, anchor: "start" },
   "San Jose, CA":                    { dx:  9, dy:  7, anchor: "start" },
@@ -1190,9 +1191,11 @@ function CircuitMap() {
           {NODES.map((n, i) => {
             const pos = projection([n.lng, n.lat]);
             if (!pos) return null;
-            const col   = getCircuitColor(n.circuit);
-            const isHQ  = n.circuit === "9th (Base)";
+            const col        = getCircuitColor(n.circuit);
+            const isHQ       = n.circuit === "9th (Base)";
             const cx = pos[0], cy = pos[1];
+            const normCircuit = normalizeCircuitId(n.circuit);
+            const labelFill   = hoveredCircuit && normCircuit === hoveredCircuit ? "#ffffff" : col;
             return (
               <g key={i} filter="url(#nodeGlow)">
                 {/* Animated outer pulse ring */}
@@ -1243,7 +1246,7 @@ function CircuitMap() {
                 {isHQ && (
                   <text
                     x={cx + 13} y={cy - 11}
-                    fill={col}
+                    fill={labelFill}
                     fontSize="9"
                     fontFamily="JetBrains Mono, monospace"
                     fontWeight="700"
@@ -1259,7 +1262,8 @@ function CircuitMap() {
                     <text
                       x={cx + off.dx} y={cy + off.dy}
                       className="node-city-label"
-                      fill={col}
+                      fill={labelFill}
+                      fontSize={hoveredCircuit && normCircuit === hoveredCircuit ? 12 : undefined}
                       textAnchor={off.anchor}
                       fillOpacity="0.9"
                     >{shortName}</text>
@@ -1288,6 +1292,8 @@ function CircuitMap() {
               const col = getCircuitColor(n.circuit);
               const shortName = n.city.split(" / ")[0].split(", ")[0];
               const ly = labelYs[i];
+              const normC = normalizeCircuitId(n.circuit);
+              const lblFill = hoveredCircuit && normC === hoveredCircuit ? "#ffffff" : col;
               return (
                 <g key={`wc-${n.city}`}>
                   <polyline
@@ -1295,7 +1301,7 @@ function CircuitMap() {
                     fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
                   />
                   <text x={CALLOUT_X} y={ly + 3.5}
-                    className="node-city-label" fill={col} textAnchor="end" fillOpacity="0.9"
+                    className="node-city-label" fill={lblFill} fontSize={hoveredCircuit && normC === hoveredCircuit ? 12 : undefined} textAnchor="end" fillOpacity="0.9"
                   >{shortName}</text>
                 </g>
               );
@@ -1320,6 +1326,8 @@ function CircuitMap() {
               const col = getCircuitColor(n.circuit);
               const shortName = n.city.split(" / ")[0].split(", ")[0];
               const ly = labelYs[i] + (EAST_CALLOUT_NUDGE[n.city] || 0);
+              const normC = normalizeCircuitId(n.circuit);
+              const lblFill = hoveredCircuit && normC === hoveredCircuit ? "#ffffff" : col;
               return (
                 <g key={`ec-${n.city}`}>
                   <polyline
@@ -1327,7 +1335,7 @@ function CircuitMap() {
                     fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
                   />
                   <text x={CALLOUT_X} y={ly + 3.5}
-                    className="node-city-label" fill={col} textAnchor="start" fillOpacity="0.9"
+                    className="node-city-label" fill={lblFill} fontSize={hoveredCircuit && normC === hoveredCircuit ? 12 : undefined} textAnchor="start" fillOpacity="0.9"
                   >{shortName}</text>
                 </g>
               );
