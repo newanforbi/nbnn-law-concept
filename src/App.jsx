@@ -529,8 +529,8 @@ body {
   100% { r: 32; opacity: 0; }
 }
 
-.node-pulse      { animation: nodePulse   2.4s ease-out infinite; }
-.node-pulse-hq   { animation: nodePulseHQ 2.4s ease-out infinite; }
+.node-pulse      { animation: none; }
+.node-pulse-hq   { animation: none; }
 
 /* Connection line dash flow */
 @keyframes dashFlow {
@@ -1167,8 +1167,8 @@ function CircuitMap() {
             );
           })}
 
-          {/* Connection lines: HQ → every other node */}
-          {hqPos && NODES.filter(n => n.circuit !== "9th (Base)").map((n, i) => {
+          {/* Connection lines: HQ → every other node (disabled) */}
+          {false && hqPos && NODES.filter(n => n.circuit !== "9th (Base)").map((n, i) => {
             const pos = projection([n.lng, n.lat]);
             if (!pos) return null;
             const col = getCircuitColor(n.circuit);
