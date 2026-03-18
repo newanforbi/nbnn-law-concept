@@ -1023,7 +1023,7 @@ const NODE_LABEL_OFFSETS = {
   "San Antonio, TX":                 { dx: -9, dy:  7, anchor: "end"   },
   // 6th Circuit
   "Detroit, MI":                     { dx:  9, dy: -8, anchor: "start" },
-  "Cleveland, OH":                   { dx:  9, dy: -8, anchor: "start" },
+  "Cleveland, OH":                   { dx:  9, dy: -2, anchor: "start" },
   "Memphis, TN":                     { dx:  9, dy: -8, anchor: "start" },
   // 7th Circuit
   "Chicago, IL":                     { dx: -9, dy: -8, anchor: "end"   },
@@ -1034,7 +1034,7 @@ const NODE_LABEL_OFFSETS = {
   "Minneapolis, MN":                 { dx: -9, dy: -8, anchor: "end"   },
   "Kansas City, MO":                 { dx: -9, dy:  7, anchor: "end"   },
   // 9th Circuit
-  "Sacramento / Stockton, CA":       { dx:  9, dy: 18, anchor: "start" },
+  "Sacramento / Stockton, CA":       { dx: -13, dy:  4, anchor: "end"   },
   "San Francisco, CA":               { dx: -9, dy: -8, anchor: "end"   },
   "Oakland, CA":                     { dx:  9, dy: -8, anchor: "start" },
   "San Jose, CA":                    { dx:  9, dy:  7, anchor: "start" },
@@ -1058,7 +1058,7 @@ const NODE_LABEL_OFFSETS = {
 
 // Per-city vertical nudge (px) applied after callout stacking, to avoid inline-label collisions
 const EAST_CALLOUT_NUDGE = {
-  "Buffalo, NY":  -20,
+  "Buffalo, NY":  -10,
   "Camden, NJ":   -20,
 };
 
