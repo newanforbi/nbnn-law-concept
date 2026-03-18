@@ -655,6 +655,7 @@ body {
   font-weight: 500;
   letter-spacing: 0.4px;
   pointer-events: none;
+  transition: font-size 0.15s ease;
   paint-order: stroke fill;
   stroke: #0A0E17;
   stroke-width: 3px;
@@ -1262,6 +1263,7 @@ function CircuitMap() {
                       x={cx + off.dx} y={cy + off.dy}
                       className="node-city-label"
                       fill={labelFill}
+                      fontSize={hoveredCircuit && normCircuit === hoveredCircuit ? 12 : undefined}
                       textAnchor={off.anchor}
                       fillOpacity="0.9"
                     >{shortName}</text>
@@ -1299,7 +1301,7 @@ function CircuitMap() {
                     fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
                   />
                   <text x={CALLOUT_X} y={ly + 3.5}
-                    className="node-city-label" fill={lblFill} textAnchor="end" fillOpacity="0.9"
+                    className="node-city-label" fill={lblFill} fontSize={hoveredCircuit && normC === hoveredCircuit ? 12 : undefined} textAnchor="end" fillOpacity="0.9"
                   >{shortName}</text>
                 </g>
               );
@@ -1333,7 +1335,7 @@ function CircuitMap() {
                     fill="none" stroke={col} strokeWidth="0.65" strokeOpacity="0.4"
                   />
                   <text x={CALLOUT_X} y={ly + 3.5}
-                    className="node-city-label" fill={lblFill} textAnchor="start" fillOpacity="0.9"
+                    className="node-city-label" fill={lblFill} fontSize={hoveredCircuit && normC === hoveredCircuit ? 12 : undefined} textAnchor="start" fillOpacity="0.9"
                   >{shortName}</text>
                 </g>
               );
