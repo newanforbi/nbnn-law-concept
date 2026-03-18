@@ -1034,7 +1034,7 @@ const NODE_LABEL_OFFSETS = {
   "Minneapolis, MN":                 { dx: -9, dy: -8, anchor: "end"   },
   "Kansas City, MO":                 { dx: -9, dy:  7, anchor: "end"   },
   // 9th Circuit
-  "Sacramento / Stockton, CA":       { dx: -13, dy: -4, anchor: "end"   },
+  "Sacramento / Stockton, CA":       { dx: 10, dy: -14, anchor: "end"   },
   "San Francisco, CA":               { dx: -9, dy: -8, anchor: "end"   },
   "Oakland, CA":                     { dx:  9, dy: -8, anchor: "start" },
   "San Jose, CA":                    { dx:  9, dy:  7, anchor: "start" },
