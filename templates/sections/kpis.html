@@ -1,0 +1,56 @@
+<div class="max-w-5xl">
+  <h2 class="font-serif text-3xl text-slate-100 mb-2">KPI Targets and Risk Matrix</h2>
+  <p class="text-slate-400 text-sm leading-relaxed mb-8">
+    What to measure by phase, and the risks that could derail each stage.
+  </p>
+
+  <!-- KPI grid -->
+  <div class="grid grid-cols-3 gap-3 mb-10">
+    {% set phase_colors = ['#E8927C', '#7EC8E3', '#A8D5BA'] %}
+    {% for k in kpi_items %}
+    <div class="card">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-3">{{ k.label }}</div>
+      <div class="space-y-2">
+        {% for phase_label, phase_val, color in [('P0', k.p0, '#E8927C'), ('P1', k.p1, '#7EC8E3'), ('P2', k.p2, '#A8D5BA')] %}
+        <div class="flex items-center gap-2">
+          <span class="badge flex-shrink-0 text-[0.6rem] px-2 py-0.5" style="background-color: {{ color }}15; color: {{ color }}; border: 1px solid {{ color }}40">{{ phase_label }}</span>
+          <span class="text-xs text-slate-400">{{ phase_val }}</span>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Risk matrix -->
+  <h3 class="font-serif text-2xl text-slate-100 mb-4">Risk Matrix</h3>
+  <div class="card overflow-hidden p-0">
+    <div class="overflow-x-auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Phase</th>
+            <th>Risk</th>
+            <th>Mitigation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for r in risk_rows %}
+          <tr>
+            <td>
+              <span class="badge text-[0.6rem] px-2 py-0.5
+                {% if r.phase == 'Phase 0' %}bg-[#E8927C]/10 text-[#E8927C] border border-[#E8927C]/30
+                {% elif r.phase == 'Phase 1' %}bg-[#7EC8E3]/10 text-[#7EC8E3] border border-[#7EC8E3]/30
+                {% else %}bg-[#A8D5BA]/10 text-[#A8D5BA] border border-[#A8D5BA]/30{% endif %}">
+                {{ r.phase }}
+              </span>
+            </td>
+            <td class="text-xs font-medium text-slate-200">{{ r.risk }}</td>
+            <td class="text-xs text-slate-400">{{ r.mitigation }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

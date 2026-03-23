@@ -1,0 +1,218 @@
+<div class="max-w-5xl" x-data="{ tab: 'digital' }">
+  <h2 class="font-serif text-3xl text-slate-100 mb-2">Marketing &amp; Client Acquisition</h2>
+  <p class="text-slate-400 text-sm leading-relaxed mb-6">
+    Three-layer architecture: digital dominance (SEO + paid search + social),
+    community presence and referral networks, and physical brand visibility. Total 36-month investment: $5.0M–$5.5M.
+  </p>
+
+  <!-- Summary cards -->
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="card">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Target Client Profile</div>
+      <div class="font-serif text-lg text-slate-100 mb-2">People in Crisis</div>
+      <div class="text-xs text-slate-400 leading-relaxed">Searching Google at 2 AM, asking community members they trust, or seeing the firm's name in their neighborhood. Not browsing LinkedIn.</div>
+    </div>
+    <div class="card">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Competitive Edge</div>
+      <div class="font-serif text-lg text-slate-100 mb-2">Speed to Convert</div>
+      <div class="text-xs text-slate-400 leading-relaxed">AI intake funnel converts leads in minutes vs. competitors' next-morning callback. Speed-to-response can double or triple conversion rates.</div>
+    </div>
+    <div class="card">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Spend Cadence</div>
+      <div class="font-serif text-lg text-slate-100 mb-2">Front-Loaded</div>
+      <div class="text-xs text-slate-400 leading-relaxed">~35% of budget in months 1–6 (launch blitz), ~40% months 7–18 (sustained high), ~25% months 19–36 (organic takes over).</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex gap-1 bg-navy-surface rounded-lg p-1 mb-6 w-fit">
+    {% for key, label in [('digital','Digital Dominance'),('community','Community & Referrals'),('brand','Brand Visibility'),('budget','Full Budget')] %}
+    <button class="tab-btn" :class="{ active: tab === '{{ key }}' }" @click="tab = '{{ key }}'">{{ label }}</button>
+    {% endfor %}
+  </div>
+
+  <!-- Digital -->
+  <div x-show="tab === 'digital'" class="section-enter space-y-4">
+    {% for layer_data in [
+      ('SEO', 'Search Engine Optimization — The Long Game', 'Dedicated legal SEO agency (Rankings.io or Mockingbird Marketing caliber). 30–40 long-form articles/month across 13 markets targeting high-intent queries: "police misconduct lawyer [city]," "asylum delay lawsuit," "wrongful termination California." Each page feeds the AI intake funnel. One in-house content manager plus freelance legal writers for jurisdiction-specific pieces.'),
+      ('PPC', 'Google Ads — Immediate Pipeline Filler', 'Launch in all 13 markets simultaneously on day one. Legal keywords run $30–$150/click ("police brutality lawyer" = $50–$150, "immigration lawyer" = $30–$80). High-intent keywords only. The AI intake funnel is the conversion weapon — instant triage vs. competitors\' next-morning callback. Taper as organic rankings mature.'),
+      ('SOCIAL', 'Social Media — Awareness & Trust', 'Facebook/Instagram (community reach, immigration populations), YouTube (pre-roll, explainers), TikTok (younger demographics, civil rights awareness). Not direct lead gen — trust-building. Attorneys become recognizable faces. Short-form know-your-rights content cross-posted as SEO fuel. One videographer/editor producing templated content localized across markets.')
+    ] %}
+    <div class="card flex gap-4 items-start">
+      <span class="badge bg-gold/10 text-gold border border-gold/20 flex-shrink-0 mt-0.5">{{ layer_data[0] }}</span>
+      <div>
+        <div class="font-medium text-slate-200 text-sm mb-1">{{ layer_data[1] }}</div>
+        <div class="text-xs text-slate-400 leading-relaxed">{{ layer_data[2] }}</div>
+      </div>
+    </div>
+    {% endfor %}
+
+    <div class="card overflow-hidden p-0">
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead><tr><th>Digital Channel</th><th>Monthly Spend</th><th>36-Month Total</th></tr></thead>
+          <tbody>
+            {% for r in digital_channels %}
+            <tr {% if r.is_total %}class="border-t-2 border-t-gold/40"{% endif %}>
+              <td {% if r.is_total %}class="font-bold text-gold"{% endif %}>{{ r.channel }}</td>
+              <td class="font-mono text-xs text-slate-300">{{ r.monthly }}</td>
+              <td class="font-mono text-xs {% if r.is_total %}font-bold text-gold{% else %}text-gold{% endif %}">{{ r.total_36mo }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Community -->
+  <div x-show="tab === 'community'" class="section-enter space-y-5">
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-1">Community Presence &amp; Referral Networks</h3>
+      <p class="text-xs text-slate-500 mb-4">The highest-converting, lowest-cost leads come from community trust. These take time but create compounding returns that paid ads never will.</p>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      {% for c in community_items %}
+      <div class="card" style="border-left: 2px solid {{ c.accent }}">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-3">{{ c.label }}</div>
+        <ul class="space-y-2">
+          {% for item in c.bullet_items %}
+          <li class="flex items-start gap-2 text-xs text-slate-400">
+            <span class="mt-1 w-1 h-1 rounded-full flex-shrink-0 bg-gold/40"></span>
+            {{ item }}
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="card overflow-hidden p-0">
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead><tr><th>Community Channel</th><th>Monthly Spend</th><th>36-Month Total</th></tr></thead>
+          <tbody>
+            {% for r in community_table %}
+            <tr>
+              <td class="text-xs text-slate-200">{{ r[0] }}</td>
+              <td class="font-mono text-xs text-slate-300">{{ r[1] }}</td>
+              <td class="font-mono text-xs text-gold">{{ r[2] }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="border-t-2 border-t-gold/40">
+              <td class="font-bold text-gold">TOTAL COMMUNITY</td>
+              <td></td>
+              <td class="font-mono text-xs font-bold text-gold">$774K–$1.54M</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card border-l-2 border-l-gold">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Key Insight</div>
+      <div class="text-xs text-slate-400 leading-relaxed">Free consultations must be genuinely valuable — not a sales pitch. The client should leave understanding their rights and options whether or not they sign. Word-of-mouth from generous consultations is marketing gold in underserved communities.</div>
+    </div>
+  </div>
+
+  <!-- Brand -->
+  <div x-show="tab === 'brand'" class="section-enter space-y-5">
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-1">Physical Brand Visibility &amp; PR</h3>
+      <p class="text-xs text-slate-500 mb-4">Most expensive layer, most debatable — but establishes legitimacy that digital alone can't. Selective deployment in tier-2 markets where case density justifies the spend.</p>
+    </div>
+    <div class="grid grid-cols-3 gap-4">
+      {% for b in brand_items %}
+      <div class="card">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">{{ b.label }}</div>
+        <div class="text-xs text-slate-400 leading-relaxed mb-3">{{ b.desc }}</div>
+        <div class="font-mono text-xs text-gold bg-navy-DEFAULT/60 rounded px-2 py-1.5">{{ b.cost }}</div>
+      </div>
+      {% endfor %}
+    </div>
+    <div class="card overflow-hidden p-0">
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead><tr><th>Brand Channel</th><th>Annual Spend</th><th>36-Month Total</th></tr></thead>
+          <tbody>
+            {% for r in brand_table %}
+            <tr>
+              <td class="text-xs text-slate-200">{{ r[0] }}</td>
+              <td class="font-mono text-xs text-slate-300">{{ r[1] }}</td>
+              <td class="font-mono text-xs text-gold">{{ r[2] }}</td>
+            </tr>
+            {% endfor %}
+            <tr class="border-t-2 border-t-gold/40">
+              <td class="font-bold text-gold">TOTAL BRAND VISIBILITY</td>
+              <td></td>
+              <td class="font-mono text-xs font-bold text-gold">$936K–$2.20M</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Budget -->
+  <div x-show="tab === 'budget'" class="section-enter space-y-6">
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-1">Full 36-Month Marketing Budget</h3>
+      <p class="text-xs text-slate-500 mb-4">Recommended allocation: $5.0M–$5.5M over 36 months, front-loaded for launch impact.</p>
+      <div class="card overflow-hidden p-0">
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Layer</th><th>Low Estimate</th><th>High Estimate</th></tr></thead>
+            <tbody>
+              {% for row in budget_summary %}
+              <tr>
+                <td class="text-xs text-slate-200">{{ row.layer }}</td>
+                <td class="font-mono text-xs text-gold">{{ row.low }}</td>
+                <td class="font-mono text-xs text-gold">{{ row.high }}</td>
+              </tr>
+              {% endfor %}
+              <tr class="border-t-2 border-t-gold/40">
+                <td class="font-bold text-gold">TOTAL MARKETING</td>
+                <td class="font-mono text-xs font-bold text-gold">$3.71M</td>
+                <td class="font-mono text-xs font-bold text-gold">$7.15M</td>
+              </tr>
+              <tr>
+                <td class="font-bold text-slate-200">RECOMMENDED TARGET</td>
+                <td class="font-mono text-xs font-bold text-gold" colspan="2">$5.0M–$5.5M</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-3">Spend Phasing</h3>
+      <div class="card overflow-hidden p-0">
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Period</th><th>% of Budget</th><th>Monthly Spend</th><th>Focus</th></tr></thead>
+            <tbody>
+              {% for r in spend_phasing %}
+              <tr>
+                <td class="font-medium text-slate-200 text-xs">{{ r[0] }}</td>
+                <td class="font-mono text-xs text-gold">{{ r[1] }}</td>
+                <td class="font-mono text-xs text-slate-300">{{ r[2] }}</td>
+                <td class="text-xs text-slate-400">{{ r[3] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4">
+      <div class="card border-l-2 border-l-gold">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Brand Signal: Hope</div>
+        <div class="text-xs text-slate-400 leading-relaxed">For victims of institutional abuse: "Someone will fight for you." Every piece of content, every community event, every intake interaction must reinforce that the firm exists to serve people the system has failed.</div>
+      </div>
+      <div class="card border-l-2 border-l-gold/60">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Brand Signal: Accountability</div>
+        <div class="text-xs text-slate-400 leading-relaxed">For institutions: "Guerrilla Litigation means multi-track, multi-forum, relentless pressure." The firm's reputation as a serious, technologically advanced adversary is itself a settlement accelerator.</div>
+      </div>
+    </div>
+  </div>
+</div>
