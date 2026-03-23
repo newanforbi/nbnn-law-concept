@@ -6,7 +6,7 @@
   </p>
 
   <!-- Treasury summary cards -->
-  <div class="grid grid-cols-3 gap-4 mb-6">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
     <div class="card">
       <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Treasury Rule</div>
       <div class="font-serif text-2xl text-slate-100 mb-2">≤ 30% Crypto</div>
@@ -25,7 +25,7 @@
   </div>
 
   <!-- Tabs -->
-  <div class="flex gap-1 bg-navy-surface rounded-lg p-1 mb-6 w-fit">
+  <div class="tab-row mb-6">
     {% for key, label in [('flagship','Stockton Flagship'),('network','13-Node Network'),('supplemental','Supplemental'),('grand','Grand Total')] %}
     <button class="tab-btn" :class="{ active: tab === '{{ key }}' }" @click="tab = '{{ key }}'">{{ label }}</button>
     {% endfor %}
@@ -78,7 +78,7 @@
 
     <div>
       <h3 class="font-serif text-xl text-slate-100 mb-3">Flagship 36-Month Summary</h3>
-      <div class="grid grid-cols-2 gap-3 mb-3">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
         {% for item in flagship_summary %}
         <div class="card">
           <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">{{ item.label }}</div>
@@ -99,7 +99,7 @@
     <div>
       <h3 class="font-serif text-xl text-slate-100 mb-1">Tiered Node Architecture</h3>
       <p class="text-xs text-slate-500 mb-4">Not all 13 nodes are identical. Centralized HQ functions serve all nodes and don't multiply by 13.</p>
-      <div class="grid grid-cols-3 gap-4 mb-6">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         {% for n in network_circuits %}
         <div class="card" style="border-top: 3px solid {{ n.color }}">
           <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">{{ n.tier }}</div>
@@ -113,7 +113,7 @@
 
     <div>
       <h3 class="font-serif text-xl text-slate-100 mb-1">Network Workforce at Full Deployment</h3>
-      <div class="grid grid-cols-2 gap-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="card">
           <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Total Headcount</div>
           <div class="font-serif text-2xl text-slate-100 mb-2">45–50</div>
@@ -196,7 +196,7 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       <div class="card" style="border-top: 3px solid #A8D5BA">
         <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Recoverable Float</div>
         <div class="font-serif text-xl text-slate-100 mb-2">$4.5M–$7.0M</div>

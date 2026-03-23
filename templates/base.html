@@ -60,20 +60,20 @@
 
     /* Table styles */
     .data-table { width: 100%; border-collapse: collapse; }
-    .data-table th { background: rgba(45,55,72,0.8); color: #D4A574; font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.6rem 1rem; text-align: left; }
-    .data-table td { padding: 0.6rem 1rem; font-size: 0.85rem; border-bottom: 1px solid rgba(45,55,72,0.5); }
+    .data-table th { background: rgba(45,55,72,0.8); color: #D4A574; font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.6rem 0.75rem; text-align: left; white-space: nowrap; }
+    .data-table td { padding: 0.6rem 0.75rem; font-size: 0.8rem; border-bottom: 1px solid rgba(45,55,72,0.5); }
     .data-table tr:hover td { background: rgba(45,55,72,0.3); }
     .data-table tr:last-child td { border-bottom: none; }
 
     /* Card */
-    .card { background: rgba(30,41,59,0.6); border: 1px solid rgba(45,55,72,0.7); border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s; }
+    .card { background: rgba(30,41,59,0.6); border: 1px solid rgba(45,55,72,0.7); border-radius: 12px; padding: 1.25rem; transition: border-color 0.2s; }
     .card:hover { border-color: rgba(212,165,116,0.3); }
 
     /* Badge */
     .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; }
 
     /* Tab button */
-    .tab-btn { padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; transition: all 0.15s; cursor: pointer; white-space: nowrap; }
+    .tab-btn { padding: 0.4rem 0.85rem; border-radius: 6px; font-size: 0.78rem; font-weight: 500; transition: all 0.15s; cursor: pointer; white-space: nowrap; flex-shrink: 0; }
     .tab-btn.active { background: rgba(212,165,116,0.18); color: #D4A574; }
     .tab-btn:not(.active) { color: #94a3b8; }
     .tab-btn:not(.active):hover { color: #cbd5e1; background: rgba(45,55,72,0.4); }
@@ -83,16 +83,37 @@
     .nav-item:hover { color: #E2E8F0; background: rgba(45,55,72,0.5); }
     .nav-item.active { color: #D4A574; background: rgba(212,165,116,0.12); }
     .nav-item .nav-icon { font-size: 1rem; width: 1.1rem; text-align: center; flex-shrink: 0; }
+
+    /* Tab row scrollable on mobile */
+    .tab-row { display: flex; gap: 2px; background: #111827; border-radius: 10px; padding: 3px; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+    .tab-row::-webkit-scrollbar { display: none; }
   </style>
 </head>
 
-<body class="h-full font-sans" x-data="{ section: '{{ active_section|default('overview') }}' }">
+<body class="h-full font-sans" x-data="{ section: '{{ active_section|default('overview') }}', sidebar: false }">
+
+  <!-- Mobile overlay -->
+  <div
+    x-show="sidebar"
+    x-cloak
+    @click="sidebar = false"
+    class="fixed inset-0 bg-black/60 z-40 md:hidden"
+    x-transition:enter="transition ease-out duration-200"
+    x-transition:enter-start="opacity-0"
+    x-transition:enter-end="opacity-100"
+    x-transition:leave="transition ease-in duration-150"
+    x-transition:leave-start="opacity-100"
+    x-transition:leave-end="opacity-0"
+  ></div>
 
   <!-- Layout: sidebar + main -->
   <div class="flex h-screen overflow-hidden">
 
-    <!-- Sidebar -->
-    <aside class="flex flex-col w-56 flex-shrink-0 bg-navy-surface border-r border-navy-border overflow-y-auto">
+    <!-- Sidebar: fixed drawer on mobile, relative on md+ -->
+    <aside
+      class="fixed inset-y-0 left-0 z-50 flex flex-col w-56 flex-shrink-0 bg-navy-surface border-r border-navy-border overflow-y-auto transition-transform duration-200 ease-in-out md:relative md:translate-x-0"
+      :class="sidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'"
+    >
 
       <!-- Logo -->
       <div class="px-4 pt-6 pb-5 border-b border-navy-border">
@@ -114,7 +135,7 @@
           ('kpis',        '◐', 'KPIs'),
         ] %}
         {% for id, icon, label in nav_items %}
-        <div class="nav-item" :class="{ active: section === '{{ id }}' }" @click="section = '{{ id }}'">
+        <div class="nav-item" :class="{ active: section === '{{ id }}' }" @click="section = '{{ id }}'; sidebar = false">
           <span class="nav-icon">{{ icon }}</span>
           <span>{{ label }}</span>
         </div>
@@ -132,11 +153,22 @@
     </aside>
 
     <!-- Main content -->
-    <main class="flex-1 overflow-y-auto">
+    <main class="flex-1 min-w-0 overflow-y-auto">
 
       <!-- Top bar -->
-      <header class="sticky top-0 z-10 flex items-center justify-between px-8 py-4 bg-navy-DEFAULT/80 backdrop-blur border-b border-navy-border">
-        <h1 class="font-serif text-lg text-gold" x-text="{
+      <header class="sticky top-0 z-10 flex items-center gap-3 px-4 md:px-8 py-3.5 bg-navy-DEFAULT/90 backdrop-blur border-b border-navy-border">
+        <!-- Hamburger (mobile only) -->
+        <button
+          @click="sidebar = !sidebar"
+          class="md:hidden flex-shrink-0 p-1.5 -ml-1 rounded-lg text-slate-400 hover:text-slate-200 hover:bg-white/5 transition-colors"
+          aria-label="Open navigation"
+        >
+          <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+
+        <h1 class="font-serif text-base md:text-lg text-gold truncate flex-1" x-text="{
           overview: 'Overview',
           map: 'Circuit Map',
           phases: 'Growth Phases',
@@ -146,11 +178,11 @@
           compliance: 'Compliance',
           kpis: 'KPIs &amp; Risk'
         }[section]"></h1>
-        <span class="text-xs font-mono text-slate-500">Ngehsi B. N. Nforbi · Plaintiff Litigation</span>
+        <span class="hidden md:block text-xs font-mono text-slate-500 flex-shrink-0">Ngehsi B. N. Nforbi · Plaintiff Litigation</span>
       </header>
 
       <!-- Sections -->
-      <div class="px-8 py-8">
+      <div class="px-4 md:px-8 py-6 md:py-8">
 
         <div x-show="section === 'overview'" x-cloak class="section-enter">
           {% include "sections/overview.html" %}

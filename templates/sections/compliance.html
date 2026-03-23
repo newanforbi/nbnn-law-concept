@@ -6,7 +6,7 @@
   </p>
 
   <!-- Three pillars -->
-  <div class="grid grid-cols-3 gap-4 mb-10">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
     {% for p in compliance_pillars %}
     <div class="card" style="border-top: 3px solid #D4A574">
       <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">{{ p.label }}</div>
@@ -25,7 +25,7 @@
 
   <!-- SOPs -->
   <h3 class="font-serif text-2xl text-slate-100 mb-5">Standard Operating Procedures</h3>
-  <div class="grid grid-cols-3 gap-4">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
     {% for sop in sops %}
     <div class="card">
       <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">SOP</div>
