@@ -1,0 +1,246 @@
+<div class="max-w-5xl" x-data="{ tab: 'flagship' }">
+  <h2 class="font-serif text-3xl text-slate-100 mb-2">36-Month Financial Model</h2>
+  <p class="text-slate-400 text-sm leading-relaxed mb-6">
+    Full deployment from day one — Year 3 staffing as Year 1 across all 13 circuit nodes.
+    Bitcoin treasury capitalization with strict IOLTA segregation.
+  </p>
+
+  <!-- Treasury summary cards -->
+  <div class="grid grid-cols-3 gap-4 mb-6">
+    <div class="card">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Treasury Rule</div>
+      <div class="font-serif text-2xl text-slate-100 mb-2">≤ 30% Crypto</div>
+      <div class="text-xs text-slate-400 leading-relaxed">Maximum crypto exposure at any time. Phased liquidation smooths tax liability. Institutional custody required.</div>
+    </div>
+    <div class="card">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">IOLTA Discipline</div>
+      <div class="font-serif text-2xl text-slate-100 mb-2">3-Way Recon</div>
+      <div class="text-xs text-slate-400 leading-relaxed">Monthly reconciliation: client ledger, firm journal, bank statement. CTAPP requires annual reporting even without funds on deposit.</div>
+    </div>
+    <div class="card">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">BTC Reserves Required</div>
+      <div class="font-serif text-2xl text-slate-100 mb-2">$36M–$42M</div>
+      <div class="text-xs text-slate-400 leading-relaxed">Liquidatable Bitcoin to fund 36 months safely, including capital gains tax on conversion, case-cost float, and 6-month emergency cushion.</div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="flex gap-1 bg-navy-surface rounded-lg p-1 mb-6 w-fit">
+    {% for key, label in [('flagship','Stockton Flagship'),('network','13-Node Network'),('supplemental','Supplemental'),('grand','Grand Total')] %}
+    <button class="tab-btn" :class="{ active: tab === '{{ key }}' }" @click="tab = '{{ key }}'">{{ label }}</button>
+    {% endfor %}
+  </div>
+
+  <!-- Flagship -->
+  <div x-show="tab === 'flagship'" class="section-enter space-y-6">
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-1">Stockton Flagship — 36-Month Staffing</h3>
+      <p class="text-xs text-slate-500 mb-4">Full boutique team from day one: 8 people including founder. All salaries are Stockton/Central Valley market rates, fully loaded at ~30%.</p>
+      <div class="card overflow-hidden p-0">
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Role</th><th>Base Salary</th><th>Loaded Annual</th><th>36-Month Total</th></tr></thead>
+            <tbody>
+              {% for r in staffing_rows %}
+              <tr {% if r.is_total %}class="border-t-2 border-t-gold/40"{% endif %}>
+                <td {% if r.is_total %}class="font-bold text-gold"{% endif %}>{{ r.role }}</td>
+                <td class="font-mono text-xs {% if r.is_total %}text-slate-300{% endif %}">{{ r.base }}</td>
+                <td class="font-mono text-xs {% if r.is_total %}text-slate-300{% endif %}">{{ r.loaded_annual }}</td>
+                <td class="font-mono text-xs {% if r.is_total %}font-bold text-gold{% endif %}">{{ r.total_36mo }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-1">Compute, AI Tooling, and SaaS</h3>
+      <p class="text-xs text-slate-500 mb-4">Full seats from day one for all 8 team members.</p>
+      <div class="card overflow-hidden p-0">
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Tool / Category</th><th>Annual Cost</th><th>36-Month Total</th></tr></thead>
+            <tbody>
+              {% for r in saas_rows %}
+              <tr {% if r.is_total %}class="border-t-2 border-t-gold/40"{% endif %}>
+                <td {% if r.is_total %}class="font-bold text-gold"{% endif %}>{{ r.tool }}</td>
+                <td class="font-mono text-xs {% if r.is_total %}text-slate-300{% endif %}">{{ r.annual }}</td>
+                <td class="font-mono text-xs {% if r.is_total %}font-bold text-gold{% endif %}">{{ r.total_36mo }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-3">Flagship 36-Month Summary</h3>
+      <div class="grid grid-cols-2 gap-3 mb-3">
+        {% for item in flagship_summary %}
+        <div class="card">
+          <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">{{ item.label }}</div>
+          <div class="font-mono text-lg text-slate-100">{{ item.value }}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="card border-l-2 border-l-gold">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Flagship Total Cash Requirement</div>
+        <div class="font-serif text-2xl text-slate-100 mb-2">$4.5M–$5.0M</div>
+        <div class="text-xs text-slate-400 leading-relaxed">Includes recoverable case-cost float. True irreversible burn: $3.08M–$3.24M. BTC reserves needed: $5.5M–$6M (with tax and cushion).</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Network -->
+  <div x-show="tab === 'network'" class="section-enter space-y-6">
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-1">Tiered Node Architecture</h3>
+      <p class="text-xs text-slate-500 mb-4">Not all 13 nodes are identical. Centralized HQ functions serve all nodes and don't multiply by 13.</p>
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        {% for n in network_circuits %}
+        <div class="card" style="border-top: 3px solid {{ n.color }}">
+          <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">{{ n.tier }}</div>
+          <div class="font-serif text-xl text-slate-100 mb-2">{{ n.nodes }} Node{% if n.nodes != 1 %}s{% endif %}</div>
+          <div class="text-xs text-slate-400 leading-relaxed mb-3">{{ n.description }}</div>
+          <div class="font-mono text-xs text-gold bg-navy-DEFAULT/60 rounded px-2 py-1.5">{{ n.cost_per_node }}</div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-1">Network Workforce at Full Deployment</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="card">
+          <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Total Headcount</div>
+          <div class="font-serif text-2xl text-slate-100 mb-2">45–50</div>
+          <div class="text-xs text-slate-400 leading-relaxed">1 founder + 26 associates + 7–8 paralegals + 5–6 HQ staff + damages specialists + contract investigators</div>
+        </div>
+        <div class="card">
+          <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Monthly Network Burn</div>
+          <div class="font-serif text-2xl text-slate-100 mb-2">$620K–$750K</div>
+          <div class="text-xs text-slate-400 leading-relaxed">Blended across all 13 nodes + HQ. Breakeven target: month 18–24 via settlement revenue at 5–8 resolutions/month network-wide.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Supplemental -->
+  <div x-show="tab === 'supplemental'" class="section-enter">
+    <h3 class="font-serif text-xl text-slate-100 mb-1">Supplemental Cost Categories</h3>
+    <p class="text-xs text-slate-500 mb-4">Costs not captured in core staffing, compute, or marketing. Budget explicitly rather than absorb as surprises.</p>
+    <div class="card overflow-hidden p-0">
+      <div class="overflow-x-auto">
+        <table class="data-table">
+          <thead><tr><th>Category</th><th>Details</th><th>36-Month Cost</th></tr></thead>
+          <tbody>
+            {% for r in supplemental_rows %}
+            {% if r[0] == 'TOTAL SUPPLEMENTAL' %}
+            <tr class="border-t-2 border-t-gold/40">
+              <td class="font-bold text-gold">{{ r[0] }}</td>
+              <td></td>
+              <td class="font-mono text-xs font-bold text-gold">{{ r[2] }}</td>
+            </tr>
+            {% else %}
+            <tr>
+              <td class="font-medium text-slate-200 text-xs">{{ r[0] }}</td>
+              <td class="text-xs text-slate-400">{{ r[1] }}</td>
+              <td class="font-mono text-xs text-gold">{{ r[2] }}</td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            <tr class="border-t-2 border-t-gold/40">
+              <td class="font-bold text-gold">TOTAL SUPPLEMENTAL</td>
+              <td></td>
+              <td class="font-mono text-xs font-bold text-gold">$1.32M–$2.71M</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="card border-l-2 border-l-gold/60 mt-4">
+      <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Midpoint Estimate</div>
+      <div class="font-serif text-2xl text-slate-100 mb-2">~$2.1M</div>
+      <div class="text-xs text-slate-400 leading-relaxed">The supplemental layer is often where startup law firms get blindsided. Pricing these explicitly prevents cash crunches that force bad case-selection decisions.</div>
+    </div>
+  </div>
+
+  <!-- Grand Total -->
+  <div x-show="tab === 'grand'" class="section-enter space-y-6">
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-1">Fully Loaded 36-Month Financial Summary</h3>
+      <p class="text-xs text-slate-500 mb-4">All 13 nodes at full deployment from day one.</p>
+      <div class="card overflow-hidden p-0">
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Cost Layer</th><th>Low Estimate</th><th>High Estimate</th></tr></thead>
+            <tbody>
+              {% for r in grand_total_rows %}
+              <tr>
+                <td class="text-slate-200 text-xs">{{ r[0] }}</td>
+                <td class="font-mono text-xs text-gold">{{ r[1] }}</td>
+                <td class="font-mono text-xs text-gold">{{ r[2] }}</td>
+              </tr>
+              {% endfor %}
+              <tr class="border-t-2 border-t-gold/40">
+                <td class="font-bold text-gold">GRAND TOTAL (36 months)</td>
+                <td class="font-mono text-xs font-bold text-gold">$28.67M</td>
+                <td class="font-mono text-xs font-bold text-gold">$35.30M</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-3 gap-4">
+      <div class="card" style="border-top: 3px solid #A8D5BA">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Recoverable Float</div>
+        <div class="font-serif text-xl text-slate-100 mb-2">$4.5M–$7.0M</div>
+        <div class="text-xs text-slate-400 leading-relaxed">Case-cost float returns through settlements. Expert retainers, filing fees, deposition costs — all recovered from case proceeds.</div>
+      </div>
+      <div class="card" style="border-top: 3px solid #E8927C">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">True Irreversible Burn</div>
+        <div class="font-serif text-xl text-slate-100 mb-2">$24.1M–$28.6M</div>
+        <div class="text-xs text-slate-400 leading-relaxed">Money spent and gone: salaries, rent, tools, marketing, overhead. This is the real capital consumption over 36 months.</div>
+      </div>
+      <div class="card" style="border-top: 3px solid #D4A574">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">BTC Reserves Required</div>
+        <div class="font-serif text-xl text-slate-100 mb-2">$36M–$42M</div>
+        <div class="text-xs text-slate-400 leading-relaxed">Accounts for 20–25% capital gains tax on BTC liquidation, conversion costs, and a 6-month emergency cushion beyond the 36-month plan.</div>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="font-serif text-xl text-slate-100 mb-3">Cash Flow Timeline</h3>
+      <div class="card overflow-hidden p-0">
+        <div class="overflow-x-auto">
+          <table class="data-table">
+            <thead><tr><th>Period</th><th>Cumulative Burn</th><th>Expected Revenue</th><th>Net Position</th></tr></thead>
+            <tbody>
+              {% for r in cash_flow_rows %}
+              <tr>
+                <td class="font-medium text-slate-200 text-xs">{{ r[0] }}</td>
+                <td class="font-mono text-xs text-gold">{{ r[1] }}</td>
+                <td class="font-mono text-xs text-slate-300">{{ r[2] }}</td>
+                <td class="font-mono text-xs {% if '–' in r[3] %}text-red-400{% else %}text-slate-400{% endif %}">{{ r[3] }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card border-l-2 border-l-gold mt-4">
+        <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-1">Dead Zone Warning</div>
+        <div class="text-xs text-slate-400 leading-relaxed">
+          Months 1–18 are the survival gauntlet. The firm burns ~$13.5M before meaningful settlement revenue begins.
+          The Bitcoin treasury must absorb this without forcing desperate case selection or premature node closures.
+          The firm that survives the dead zone owns the market position.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

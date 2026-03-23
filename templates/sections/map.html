@@ -1,0 +1,54 @@
+<!-- Pass circuit/node data to JS -->
+<script>
+  const CIRCUIT_DATA = {{ circuits | tojson }};
+  const NODE_DATA = {{ nodes | tojson }};
+  const STATE_FIPS_DATA = {{ state_fips | tojson }};
+</script>
+
+<div class="max-w-6xl">
+  <h2 class="font-serif text-3xl text-slate-100 mb-2">Circuit-Node Expansion Map</h2>
+  <p class="text-slate-400 text-sm leading-relaxed mb-6">
+    Strategic anchor cities across all 13 federal circuits. Each node sits at the intersection of federal
+    court power, high civil rights violation density, and underserved populations. Hover over any dot to
+    see the strategic rationale.
+  </p>
+
+  <!-- D3 Map container -->
+  <div class="card p-4 mb-6" style="min-height: 440px;">
+    <div id="circuit-map" style="width: 100%; height: 420px;"></div>
+  </div>
+
+  <!-- Node table -->
+  <div class="card overflow-hidden p-0">
+    <div class="px-5 py-3 border-b border-navy-border">
+      <span class="text-xs font-mono text-gold/70 uppercase tracking-widest">Strategic Nodes — {{ nodes | length }} Cities</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Circuit</th>
+            <th>Anchor City</th>
+            <th>Strategic Rationale</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for n in nodes %}
+          <tr>
+            <td>
+              <span class="font-mono text-xs">{{ n.circuit }}</span>
+            </td>
+            <td class="font-medium text-slate-200">{{ n.city }}</td>
+            <td class="text-slate-400">{{ n.rationale }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Load D3 + TopoJSON then the circuit map module -->
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script src="/static/js/circuit-map.js"></script>

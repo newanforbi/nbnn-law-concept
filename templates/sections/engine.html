@@ -1,0 +1,59 @@
+<div class="max-w-5xl">
+  <h2 class="font-serif text-3xl text-slate-100 mb-2">AI-Native Operations Engine</h2>
+  <p class="text-slate-400 text-sm leading-relaxed mb-8">
+    A three-layer litigation production system augmented by agentic AI. The baseline rule:
+    AI can draft; lawyers must decide and certify.
+  </p>
+
+  <!-- Three layers -->
+  <div class="space-y-3 mb-10">
+    {% for layer in engine_layers %}
+    <div class="card flex gap-4 items-start">
+      <span class="badge bg-gold/10 text-gold border border-gold/20 flex-shrink-0 mt-0.5">{{ layer.badge }}</span>
+      <div>
+        <div class="font-medium text-slate-200 mb-1 text-sm">{{ layer.title }}</div>
+        <div class="text-xs text-slate-400 leading-relaxed">{{ layer.text }}</div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Six ABA controls -->
+  <h3 class="font-serif text-2xl text-slate-100 mb-1">Six Enforceable AI Controls</h3>
+  <p class="text-xs text-slate-500 mb-5">Derived from ABA Formal Opinion 512 and operationalized as firm-wide policy.</p>
+
+  <div class="grid grid-cols-3 gap-3 mb-10">
+    {% for c in aba_controls %}
+    <div class="card">
+      <div class="font-mono text-2xl text-gold/30 mb-2 leading-none">{{ c.num }}</div>
+      <div class="text-sm font-medium text-slate-200 mb-2">{{ c.title }}</div>
+      <div class="text-xs text-slate-400 leading-relaxed">{{ c.desc }}</div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Tech stack table -->
+  <h3 class="font-serif text-2xl text-slate-100 mb-4">Strategic Tech Stack</h3>
+  <div class="card overflow-hidden p-0">
+    <div class="overflow-x-auto">
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th>Primary Tool</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for t in tech_stack %}
+          <tr>
+            <td class="text-gold/80 font-medium text-xs">{{ t.category }}</td>
+            <td class="font-mono text-xs text-slate-200">{{ t.tool }}</td>
+            <td class="text-xs text-slate-400">{{ t.role }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

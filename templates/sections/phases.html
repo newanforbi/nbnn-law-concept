@@ -1,0 +1,101 @@
+<div class="max-w-3xl" x-data="{ open: null }">
+  <h2 class="font-serif text-3xl text-slate-100 mb-2">Growth Phases</h2>
+  <p class="text-slate-400 text-sm leading-relaxed mb-8">
+    Four sequential phases from solo founder to 13-circuit national expansion. Each phase has defined triggers before advancing.
+  </p>
+
+  <!-- Timeline -->
+  <div class="relative">
+    <!-- Vertical line -->
+    <div class="absolute left-[1.1rem] top-4 bottom-4 w-px bg-navy-border"></div>
+
+    <div class="space-y-3">
+      {% for p in phases %}
+      <div class="relative pl-10">
+        <!-- Dot -->
+        <div class="absolute left-3 top-4 w-3.5 h-3.5 rounded-full border-2 flex-shrink-0 -translate-x-1/2"
+             style="background-color: {{ p.color }}20; border-color: {{ p.color }};"></div>
+
+        <!-- Card -->
+        <div class="card cursor-pointer select-none" @click="open = open === {{ loop.index0 }} ? null : {{ loop.index0 }}">
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div>
+                <div class="flex items-center gap-2 mb-0.5">
+                  <span class="font-mono text-xs font-semibold" style="color: {{ p.color }}">{{ p.phase }}</span>
+                  <span class="text-slate-500 text-xs">·</span>
+                  <span class="text-slate-400 text-xs">{{ p.subtitle }}</span>
+                </div>
+                <div class="text-[0.7rem] text-slate-500 font-mono">{{ p.timeline }}</div>
+              </div>
+            </div>
+            <svg class="w-4 h-4 text-slate-500 transition-transform duration-200" :class="{ 'rotate-180': open === {{ loop.index0 }} }" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+            </svg>
+          </div>
+
+          <!-- Expanded content -->
+          <div x-show="open === {{ loop.index0 }}" x-transition:enter="transition ease-out duration-150" x-transition:enter-start="opacity-0 -translate-y-1" x-transition:enter-end="opacity-100 translate-y-0" class="mt-5 pt-5 border-t border-navy-border space-y-5">
+
+            <div class="grid grid-cols-2 gap-5">
+              <div>
+                <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Objectives</div>
+                <ul class="space-y-1.5">
+                  {% for obj in p.objectives %}
+                  <li class="flex items-start gap-2 text-xs text-slate-300">
+                    <span class="mt-1 w-1 h-1 rounded-full flex-shrink-0" style="background-color: {{ p.color }}"></span>
+                    {{ obj }}
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+              <div>
+                <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Deliverables</div>
+                <ul class="space-y-1.5">
+                  {% for d in p.deliverables %}
+                  <li class="flex items-start gap-2 text-xs text-slate-300">
+                    <span class="mt-1 w-1 h-1 rounded-full flex-shrink-0" style="background-color: {{ p.color }}"></span>
+                    {{ d }}
+                  </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-3 gap-3">
+              <div class="bg-navy-DEFAULT/60 rounded-lg p-3">
+                <div class="text-[0.6rem] font-mono text-slate-500 uppercase tracking-widest mb-1">Budget Low</div>
+                <div class="font-mono text-xs text-gold">{{ p.budget.low }}</div>
+              </div>
+              <div class="bg-navy-DEFAULT/60 rounded-lg p-3">
+                <div class="text-[0.6rem] font-mono text-slate-500 uppercase tracking-widest mb-1">Budget Mid</div>
+                <div class="font-mono text-xs text-gold">{{ p.budget.mid }}</div>
+              </div>
+              <div class="bg-navy-DEFAULT/60 rounded-lg p-3">
+                <div class="text-[0.6rem] font-mono text-slate-500 uppercase tracking-widest mb-1">Budget High</div>
+                <div class="font-mono text-xs text-gold">{{ p.budget.high }}</div>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-navy-DEFAULT/60 rounded-lg p-3">
+                <div class="text-[0.6rem] font-mono text-slate-500 uppercase tracking-widest mb-1">Team</div>
+                <div class="text-xs text-slate-300">{{ p.team }}</div>
+              </div>
+              <div class="bg-navy-DEFAULT/60 rounded-lg p-3">
+                <div class="text-[0.6rem] font-mono text-slate-500 uppercase tracking-widest mb-1">Advance Trigger</div>
+                <div class="text-xs text-slate-300 italic">{{ p.trigger }}</div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script>
+// x-collapse plugin isn't included by default; use x-show with transition instead
+</script>

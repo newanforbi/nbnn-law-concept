@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NBNN Law — Strategic Concept</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,300&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['"Instrument Serif"', 'Georgia', 'serif'],
+            sans: ['"DM Sans"', 'system-ui', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            gold: {
+              DEFAULT: '#D4A574',
+              light: '#E8C49A',
+              dark: '#B8844E',
+              muted: 'rgba(212,165,116,0.15)',
+            },
+            navy: {
+              DEFAULT: '#0A0E17',
+              surface: '#111827',
+              card: '#1E293B',
+              border: '#2D3748',
+            },
+          },
+        },
+      },
+    }
+  </script>
+
+  <!-- Alpine.js -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+  <style>
+    :root { --accent: #D4A574; }
+    body { background-color: #0A0E17; color: #E2E8F0; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #111827; }
+    ::-webkit-scrollbar-thumb { background: #2D3748; border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #4A5568; }
+
+    /* Section fade transition */
+    [x-cloak] { display: none !important; }
+    .section-enter { animation: fadeIn 0.2s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Table styles */
+    .data-table { width: 100%; border-collapse: collapse; }
+    .data-table th { background: rgba(45,55,72,0.8); color: #D4A574; font-family: 'DM Sans', sans-serif; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; padding: 0.6rem 1rem; text-align: left; }
+    .data-table td { padding: 0.6rem 1rem; font-size: 0.85rem; border-bottom: 1px solid rgba(45,55,72,0.5); }
+    .data-table tr:hover td { background: rgba(45,55,72,0.3); }
+    .data-table tr:last-child td { border-bottom: none; }
+
+    /* Card */
+    .card { background: rgba(30,41,59,0.6); border: 1px solid rgba(45,55,72,0.7); border-radius: 12px; padding: 1.5rem; transition: border-color 0.2s; }
+    .card:hover { border-color: rgba(212,165,116,0.3); }
+
+    /* Badge */
+    .badge { display: inline-flex; align-items: center; padding: 0.2rem 0.65rem; border-radius: 999px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; }
+
+    /* Tab button */
+    .tab-btn { padding: 0.45rem 1rem; border-radius: 6px; font-size: 0.8rem; font-weight: 500; transition: all 0.15s; cursor: pointer; white-space: nowrap; }
+    .tab-btn.active { background: rgba(212,165,116,0.18); color: #D4A574; }
+    .tab-btn:not(.active) { color: #94a3b8; }
+    .tab-btn:not(.active):hover { color: #cbd5e1; background: rgba(45,55,72,0.4); }
+
+    /* Nav item */
+    .nav-item { display: flex; align-items: center; gap: 0.65rem; padding: 0.5rem 0.75rem; border-radius: 8px; font-size: 0.82rem; font-weight: 500; cursor: pointer; transition: all 0.15s; color: #94a3b8; white-space: nowrap; }
+    .nav-item:hover { color: #E2E8F0; background: rgba(45,55,72,0.5); }
+    .nav-item.active { color: #D4A574; background: rgba(212,165,116,0.12); }
+    .nav-item .nav-icon { font-size: 1rem; width: 1.1rem; text-align: center; flex-shrink: 0; }
+  </style>
+</head>
+
+<body class="h-full font-sans" x-data="{ section: '{{ active_section|default('overview') }}' }">
+
+  <!-- Layout: sidebar + main -->
+  <div class="flex h-screen overflow-hidden">
+
+    <!-- Sidebar -->
+    <aside class="flex flex-col w-56 flex-shrink-0 bg-navy-surface border-r border-navy-border overflow-y-auto">
+
+      <!-- Logo -->
+      <div class="px-4 pt-6 pb-5 border-b border-navy-border">
+        <div class="font-serif text-base leading-tight text-gold">NBNN</div>
+        <div class="font-serif text-xs text-slate-400 mt-0.5 italic">Attorneys at Law</div>
+        <div class="mt-2 text-[0.65rem] font-mono text-slate-600 uppercase tracking-widest">Strategic Blueprint</div>
+      </div>
+
+      <!-- Nav -->
+      <nav class="flex-1 px-3 py-4 space-y-0.5">
+        {% set nav_items = [
+          ('overview',    '⬡', 'Overview'),
+          ('map',         '◎', 'Circuit Map'),
+          ('phases',      '◈', 'Phases'),
+          ('engine',      '⟳', 'AI Engine'),
+          ('financials',  '▦', 'Financials'),
+          ('marketing',   '◆', 'Marketing'),
+          ('compliance',  '◉', 'Compliance'),
+          ('kpis',        '◐', 'KPIs'),
+        ] %}
+        {% for id, icon, label in nav_items %}
+        <div class="nav-item" :class="{ active: section === '{{ id }}' }" @click="section = '{{ id }}'">
+          <span class="nav-icon">{{ icon }}</span>
+          <span>{{ label }}</span>
+        </div>
+        {% endfor %}
+      </nav>
+
+      <!-- Footer -->
+      <div class="px-4 py-4 border-t border-navy-border">
+        <div class="text-[0.65rem] text-slate-600 font-mono leading-relaxed">
+          DE PLLC · AI-Native<br/>
+          Federal Civil Rights<br/>
+          Immigration Defense
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content -->
+    <main class="flex-1 overflow-y-auto">
+
+      <!-- Top bar -->
+      <header class="sticky top-0 z-10 flex items-center justify-between px-8 py-4 bg-navy-DEFAULT/80 backdrop-blur border-b border-navy-border">
+        <h1 class="font-serif text-lg text-gold" x-text="{
+          overview: 'Overview',
+          map: 'Circuit Map',
+          phases: 'Growth Phases',
+          engine: 'AI Engine',
+          financials: 'Financials',
+          marketing: 'Marketing',
+          compliance: 'Compliance',
+          kpis: 'KPIs &amp; Risk'
+        }[section]"></h1>
+        <span class="text-xs font-mono text-slate-500">Ngehsi B. N. Nforbi · Plaintiff Litigation</span>
+      </header>
+
+      <!-- Sections -->
+      <div class="px-8 py-8">
+
+        <div x-show="section === 'overview'" x-cloak class="section-enter">
+          {% include "sections/overview.html" %}
+        </div>
+
+        <div x-show="section === 'map'" x-cloak class="section-enter">
+          {% include "sections/map.html" %}
+        </div>
+
+        <div x-show="section === 'phases'" x-cloak class="section-enter">
+          {% include "sections/phases.html" %}
+        </div>
+
+        <div x-show="section === 'engine'" x-cloak class="section-enter">
+          {% include "sections/engine.html" %}
+        </div>
+
+        <div x-show="section === 'financials'" x-cloak class="section-enter">
+          {% include "sections/financials.html" %}
+        </div>
+
+        <div x-show="section === 'marketing'" x-cloak class="section-enter">
+          {% include "sections/marketing.html" %}
+        </div>
+
+        <div x-show="section === 'compliance'" x-cloak class="section-enter">
+          {% include "sections/compliance.html" %}
+        </div>
+
+        <div x-show="section === 'kpis'" x-cloak class="section-enter">
+          {% include "sections/kpis.html" %}
+        </div>
+
+      </div>
+    </main>
+  </div>
+
+</body>
+</html>
