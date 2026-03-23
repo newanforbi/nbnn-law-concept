@@ -6,7 +6,7 @@
   </p>
 
   <!-- Summary cards -->
-  <div class="grid grid-cols-3 gap-4 mb-6">
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
     <div class="card">
       <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Target Client Profile</div>
       <div class="font-serif text-lg text-slate-100 mb-2">People in Crisis</div>
@@ -25,7 +25,7 @@
   </div>
 
   <!-- Tabs -->
-  <div class="flex gap-1 bg-navy-surface rounded-lg p-1 mb-6 w-fit">
+  <div class="tab-row mb-6">
     {% for key, label in [('digital','Digital Dominance'),('community','Community & Referrals'),('brand','Brand Visibility'),('budget','Full Budget')] %}
     <button class="tab-btn" :class="{ active: tab === '{{ key }}' }" @click="tab = '{{ key }}'">{{ label }}</button>
     {% endfor %}
@@ -71,7 +71,7 @@
       <h3 class="font-serif text-xl text-slate-100 mb-1">Community Presence &amp; Referral Networks</h3>
       <p class="text-xs text-slate-500 mb-4">The highest-converting, lowest-cost leads come from community trust. These take time but create compounding returns that paid ads never will.</p>
     </div>
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       {% for c in community_items %}
       <div class="card" style="border-left: 2px solid {{ c.accent }}">
         <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-3">{{ c.label }}</div>
@@ -119,7 +119,7 @@
       <h3 class="font-serif text-xl text-slate-100 mb-1">Physical Brand Visibility &amp; PR</h3>
       <p class="text-xs text-slate-500 mb-4">Most expensive layer, most debatable — but establishes legitimacy that digital alone can't. Selective deployment in tier-2 markets where case density justifies the spend.</p>
     </div>
-    <div class="grid grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
       {% for b in brand_items %}
       <div class="card">
         <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">{{ b.label }}</div>
@@ -204,7 +204,7 @@
       </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
       <div class="card border-l-2 border-l-gold">
         <div class="text-[0.65rem] font-mono text-gold/70 uppercase tracking-widest mb-2">Brand Signal: Hope</div>
         <div class="text-xs text-slate-400 leading-relaxed">For victims of institutional abuse: "Someone will fight for you." Every piece of content, every community event, every intake interaction must reinforce that the firm exists to serve people the system has failed.</div>
