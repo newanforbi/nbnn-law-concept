@@ -4,6 +4,10 @@
 
 **Live:** https://newanforbi.github.io/nbnn-law-concept/
 
+<!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
+[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+<!-- ALL-CONTRIBUTORS-BADGE:END -->
+
 A concept dashboard for an AI-native, multi-track plaintiff litigation firm built to collapse the cost of legal production while capturing underserved markets in civil rights, state torts, and immigration law.
 
 ## Sections
@@ -55,3 +59,19 @@ nbnn-law-concept/
 │   ├── main.jsx        # React root mount
 │   └── App.jsx         # All sections, styles, and D3 chart logic
 ```
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/newanforbi"><img src="https://avatars.githubusercontent.com/newanforbi?s=100" width="100px;" alt="newanforbi"/><br /><sub><b>newanforbi</b></sub></a><br /><a title="Code">💻</a> <a title="Design">🎨</a> <a title="Documentation">📖</a> <a title="Ideas">🤔</a></td>
+    </tr>
+  </tbody>
+</table>
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+<!-- ALL-CONTRIBUTORS-LIST:END -->
