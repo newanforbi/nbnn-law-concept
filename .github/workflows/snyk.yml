@@ -8,6 +8,8 @@ on:
 jobs:
   snyk:
     runs-on: ubuntu-latest
+    env:
+      SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
     steps:
       - uses: actions/checkout@v4
 
@@ -18,7 +20,12 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      - name: Warn if SNYK_TOKEN is not configured
+        if: env.SNYK_TOKEN == ''
+        run: echo "::warning::SNYK_TOKEN secret is not set — Snyk scan skipped. Add the secret to enable scanning."
+
       - name: Run Snyk to check for vulnerabilities
+        if: env.SNYK_TOKEN != ''
         uses: snyk/actions/node@master
         env:
           SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
