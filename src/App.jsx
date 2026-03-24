@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import * as d3 from "d3";
+import { Analytics } from "@vercel/analytics/react";
 
 // ── Circuit data ──────────────────────────────────────────────────
 const CIRCUITS = [
@@ -2412,6 +2413,7 @@ export default function App() {
 
   return (
     <>
+      <Analytics />
       <style>{css}</style>
       {/* Note: In React, script tags embedded in JSX generally don't run as expected. 
           You might want to move this into your public/index.html instead. */}
