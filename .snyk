@@ -1,0 +1,6 @@
+# Snyk (https://snyk.io) policy file — NBNN Law Concept
+# Controls which vulnerabilities are ignored or patched.
+# Connect this repo at https://app.snyk.io to activate scanning and fix PRs.
+version: v1.25.0
+ignore: {}
+patch: {}
