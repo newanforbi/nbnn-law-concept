@@ -46,6 +46,15 @@
         "code",
         "infra"
       ]
+    },
+    {
+      "login": "vercel[bot]",
+      "name": "Vercel",
+      "avatar_url": "https://avatars.githubusercontent.com/in/15617?v=4",
+      "profile": "https://github.com/apps/vercel",
+      "contributions": [
+        "infra"
+      ]
     }
   ],
   "contributorsPerLine": 7,

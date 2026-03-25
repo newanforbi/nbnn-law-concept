@@ -5,7 +5,7 @@
 **Live:** https://newanforbi.github.io/nbnn-law-concept/
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-5-orange.svg?style=flat-square)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 A concept dashboard for an AI-native, multi-track plaintiff litigation firm built to collapse the cost of legal production while capturing underserved markets in civil rights, state torts, and immigration law.
@@ -72,6 +72,7 @@ nbnn-law-concept/
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4&s=100" width="100px;" alt="dependabot[bot]"/><br /><sub><b>dependabot[bot]</b></sub></a><br /><a title="Maintenance">🚧</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/apps/github-actions"><img src="https://avatars.githubusercontent.com/in/15368?v=4&s=100" width="100px;" alt="github-actions[bot]"/><br /><sub><b>github-actions[bot]</b></sub></a><br /><a title="Tools">🔧</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/claude"><img src="https://avatars.githubusercontent.com/u/81847?s=100" width="100px;" alt="Claude"/><br /><sub><b>Claude</b></sub></a><br /><a title="Code">💻</a> <a title="Infrastructure">🚇</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/apps/vercel"><img src="https://avatars.githubusercontent.com/in/15617?v=4&s=100" width="100px;" alt="Vercel"/><br /><sub><b>Vercel</b></sub></a><br /><a title="Infrastructure">🚇</a></td>
     </tr>
   </tbody>
 </table>
