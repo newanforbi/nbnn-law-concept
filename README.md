@@ -5,7 +5,7 @@
 **Live:** https://newanforbi.github.io/nbnn-law-concept/
 
 <!-- ALL-CONTRIBUTORS-BADGE:START - Do not remove or modify this section -->
-[![All Contributors](https://img.shields.io/badge/all_contributors-1-orange.svg?style=flat-square)](#contributors)
+[![All Contributors](https://img.shields.io/badge/all_contributors-4-orange.svg?style=flat-square)](#contributors)
 <!-- ALL-CONTRIBUTORS-BADGE:END -->
 
 A concept dashboard for an AI-native, multi-track plaintiff litigation firm built to collapse the cost of legal production while capturing underserved markets in civil rights, state torts, and immigration law.
@@ -27,8 +27,8 @@ A concept dashboard for an AI-native, multi-track plaintiff litigation firm buil
 
 | Tool | Version | Purpose |
 |---|---|---|
-| React | 18 | UI components & state |
-| Vite | 6 | Dev server & bundler |
+| React | 19 | UI components & state |
+| Vite | 8 | Dev server & bundler |
 | D3.js | 7 | Interactive circuit map |
 | TopoJSON | 3 | US state geodata |
 
@@ -69,6 +69,9 @@ nbnn-law-concept/
   <tbody>
     <tr>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/newanforbi"><img src="https://avatars.githubusercontent.com/newanforbi?s=100" width="100px;" alt="newanforbi"/><br /><sub><b>newanforbi</b></sub></a><br /><a title="Code">💻</a> <a title="Design">🎨</a> <a title="Documentation">📖</a> <a title="Ideas">🤔</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/apps/dependabot"><img src="https://avatars.githubusercontent.com/in/29110?v=4&s=100" width="100px;" alt="dependabot[bot]"/><br /><sub><b>dependabot[bot]</b></sub></a><br /><a title="Maintenance">🚧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/apps/github-actions"><img src="https://avatars.githubusercontent.com/in/15368?v=4&s=100" width="100px;" alt="github-actions[bot]"/><br /><sub><b>github-actions[bot]</b></sub></a><br /><a title="Tools">🔧</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/claude"><img src="https://avatars.githubusercontent.com/u/81847?s=100" width="100px;" alt="Claude"/><br /><sub><b>Claude</b></sub></a><br /><a title="Code">💻</a> <a title="Infrastructure">🚇</a></td>
     </tr>
   </tbody>
 </table>
